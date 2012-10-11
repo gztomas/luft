@@ -20,6 +20,8 @@ function main() {
 	canvas.style.marginTop = 'auto';
 	canvas.style.marginBottom = 'auto';
 	window.document.body.appendChild(canvas);
+	canvas.width = 640;
+	canvas.height = 480;
 	context = canvas.getContext("2d");
 
 	var salir = new OBJETO();

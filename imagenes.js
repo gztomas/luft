@@ -3,7 +3,7 @@ var borradorpag = [];
 
 function DibujarBitmap(nombre, ancho, alto)
 {
-	context.drawImage(document.getElementById(nombre), 0, 0, ancho, alto, 0, 0, 640, 480);
+	context.drawImage(document.getElementById(nombre), 0, 0);
 	var fp = context.getImageData(0,0, ancho, alto);
 	var i,j;
 	for(i=alto-1;i>=0;i--)
