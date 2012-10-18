@@ -1,13 +1,3 @@
-//A continuacion se definen las posiciones en las que se encuntra la
-//informacion de la imagen y la paleta de colores en un archivo BMP
-var COMIENZO_IMAGEN = 1078;
-var INICIO_PALETA = 54;
-var PALETA = "paleta.BMP";
-
-// Definicion de tipos de errores
-var ERR_MEMORIA = 0;
-var ERR_ARCHIVO = 1;
-
 //Definiciones de codigos de teclado
 var KEY_UP = 38;
 var KEY_DOWN = 40;

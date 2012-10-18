@@ -25,50 +25,64 @@ function GirarObjeto(objeto, angulo)
 
 function AvanzarObjeto(objeto)
 {
-	var cosT = cos(PI*(objeto.angulo-90)/180);
-	var sinT = sin(PI*(objeto.angulo-90)/180);
+	var cosT = Math.cos(window.PI*(objeto.angulo-90)/180);
+	var sinT = Math.sin(window.PI*(objeto.angulo-90)/180);
 	MoverObjeto(objeto, cosT*objeto.velocidad, sinT*objeto.velocidad);
 }
 
 function CrearObjeto(objeto, bitmap, cuadro, xinicial, yinicial, ancho, alto, angulo, velocidad)
 {
-	var x,y;
 	objeto.x = xinicial;
 	objeto.y = yinicial;
 	objeto.alto = alto;
 	objeto.ancho = ancho;
 	objeto.velocidad = velocidad;
 	objeto.angulo = angulo;
-	context.drawImage(document.getElementById(bitmap), 0, 0);
-	objeto.archivo = context.getImageData(0,0, ancho, alto);
-	objeto.imagen = context.getImageData(0,cuadro*alto, ancho, alto);
+    
+    var file = document.getElementById(bitmap);
+    objeto.cuadros = file.height / alto;
+    var auxCanvas = document.getElementById("auxCanvas");
+    if(!auxCanvas) {
+        auxCanvas = document.createElement("canvas");
+        auxCanvas.id = "auxCanvas";
+    }
+    auxCanvas.style.width = auxCanvas.width = file.width;
+    auxCanvas.style.height = auxCanvas.height = file.height;
+	var auxContext = auxCanvas.getContext("2d");
+    auxContext.drawImage(document.getElementById(bitmap), 0, 0, file.width, file.height);
+	objeto.archivo = auxContext.getImageData(0, 0, file.width, file.height);
+    objeto.imagen = window.context.createImageData(objeto.ancho, objeto.alto);
+    CambiarCuadro(objeto, cuadro);
 }
 
 function CambiarCuadro(objeto, cuadro)
 {
-	var x,y;
-	var ancho=objeto.ancho, alto=objeto.alto;
-	objeto.imagen.set(objeto.archivo, cuadro * alto * ancho * 4);
+    cuadro = objeto.cuadros - cuadro;
+	objeto.imagen.data.set(objeto.archivo.data.subarray(cuadro * objeto.alto * objeto.ancho * 4, (cuadro+1) * objeto.alto * objeto.ancho * 4));
 }
 
 function DibujarObjeto(objeto)
 {
 	var x, y, x1, y1, coordx, coordy, centrox, centroy;
-	var cosT = cos(3.141593*objeto.angulo/180);
-	var sinT = sin(3.141593*objeto.angulo/180);
+	var cosT = Math.cos(3.141593*objeto.angulo/180);
+	var sinT = Math.sin(3.141593*objeto.angulo/180);
 	centrox=objeto.ancho>>1;
 	centroy=objeto.alto>>1;
 	coordx=objeto.x-centrox;
 	coordy=objeto.y-centroy;
-	AgregarBuffer(objeto.ancho, objeto.alto, coordx, coordy);
+	window.AgregarBuffer(objeto.ancho, objeto.alto, coordx, coordy);
+    var data = objeto.imagen.data;
 	for (y = 0 ; y < objeto.alto ; y++)
-		for (x = 0; x < objeto.ancho; x++)
-		{
-			x1 = ( x - centrox ) * cosT + ( y - centroy ) * sinT;
-			y1 = ( y - centroy ) * cosT - ( x - centrox ) * sinT;
-			x1 = x1 + objeto.ancho * 0.5;
-			y1 = y1 + objeto.alto * 0.5;
-			if (x1>0 && y1>0 && x1<objeto.ancho && y1<objeto.alto && objeto.imagen[x1+y1*objeto.ancho])
-				Pixel(x+coordx,y+coordy,objeto.imagen[x1+y1*objeto.ancho]);
+		for (x = 0; x < objeto.ancho; x++) {
+			x1 = ( x - centrox ) * cosT + ( y - centroy ) * sinT + objeto.ancho * 0.5;
+			y1 = ( y - centroy ) * cosT - ( x - centrox ) * sinT + objeto.alto * 0.5;
+            var offset = x1 * 4 + y1 * 4 * objeto.ancho;
+			if(x1 > 0 && y1 > 0 && x1 < objeto.ancho && y1 < objeto.alto && (data[offset+0] || data[offset+1] || data[offset+2]))
+				window.Pixel(x+coordx,y+coordy,
+                    data[offset+0],
+                    data[offset+1],
+                    data[offset+2],
+                    data[offset+3]
+                );
 		}
 }

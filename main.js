@@ -9,6 +9,16 @@ var GANADOR2 = 2;
 var CANCELAR = 3;
 
 var context;
+var state = 0;
+var versus = new OBJETO();
+var nave1 = new OBJETO();
+var nave2 = new OBJETO();
+var frames = 0;   
+var salir = new OBJETO();
+var jugar = new OBJETO();
+
+var seleccion = 1,i=27,j=0, ganador; 
+
 
 function main() {
 
@@ -24,67 +34,19 @@ function main() {
 	canvas.height = 480;
 	context = canvas.getContext("2d");
 
-	var salir = new OBJETO();
-	var jugar = new OBJETO();
-	var versus = new OBJETO();
-	var nave1 = new OBJETO();
-	var nave2 = new OBJETO();
 
-	var seleccion = 1,i=27,j=0, ganador;
 	Inicializacion();
 
 	CargarFondo("intro");
 	CrearObjeto(versus,"versus",27,320,280,64,84,0,0);
 	CrearObjeto(nave1,"nave1A",0,180,280,64,64,0,0);
 	CrearObjeto(nave2,"nave2A",0,460,280,80,68,0,0);
-	var frames = 0;
-	while(Msg.message != WM_KEYDOWN) {
-		DibujarObjeto(versus);
-		DibujarObjeto(nave1);
-		DibujarObjeto(nave2);
-		CambiarCuadro(versus,i);
-		CambiarCuadro(nave1,j);
-		CambiarCuadro(nave2,j);
-		if(!(frames++%3)) {
-			i--;
-			j++;
-			if(i<0) i=27;
-			if(j>30) j=1;
-		}
-		Frame();
-	}
-	Frame(); //Restituye los fondos del menu, para evitar parpadeo
-	VerPantalla(0);     // Configuracion de paginas inicial
-	ActivarPantalla(1); // Evita parpadeo por mal sincronismo de paginas
+    
+    setInterval(function() {
+        Menu();
+    }, 1)
 
-	CrearObjeto(jugar,"jugar.bmp",0,320,50,152,30,0,0);
-	CrearObjeto(salir,"salir.bmp",1,320,80,152,30,0,0);
-	CargarFondo("backmenu");
-
-
-	setInterval(function() {
-		switch(state) {
-			case MENU:
-				DibujarObjeto(jugar);
-				DibujarObjeto(salir);
-				Frame();
-				break;
-			case GANADOR1:
-				DibujarObjeto(nave1);
-				CambiarCuadro(nave1,i); // Animacion de la nave
-				if(!(frames++%4)) {
-					i++;
-					if(i>30)
-						i=1;
-				}
-				Frame();
-				break;
-			case GANADOR2:
-				break;
-		}
-	}, 10);
-
-	canvas.onkeydown = function(key) {
+    canvas.onkeydown = function(key) {
 		switch(key) {
 			case KEY_UP:
 				CambiarCuadro(jugar,0); // Activa la palabra "jugar"
@@ -111,22 +73,68 @@ function main() {
 							i=0;
 							CargarFondo("ganador");
 							if(ganador==GANADOR2)
-								CrearObjeto(nave1,"nave1A.bmp",0,320,300,64,64,0,0);
+								CrearObjeto(nave1,"nave1A",0,320,300,64,64,0,0);
 							else
-								CrearObjeto(nave1,"nave2A.bmp",0,320,300,80,68,0,0);
+								CrearObjeto(nave1,"nave2A",320,300,80,68,0,0);
 							frames = 0;
 						}
 					}
 					Frame(); // Fuerza restitucion de fondos del juego
 					VerPantalla(0);     // Configuracion de pag inicial
 					ActivarPantalla(1); // Evita parpadeo de menu
-					CrearObjeto(jugar,"jugar.bmp",0,320,50,152,30,0,0);
-					CrearObjeto(salir,"salir.bmp",1,320,80,152,30,0,0);
+					CrearObjeto(jugar,"jugar",0,320,50,152,30,0,0);
+					CrearObjeto(salir,"salir",1,320,80,152,30,0,0);
 					CargarFondo("backmenu");
 				}
 				break;
 		}
 	}
+}
+    
+function Menu() {   
+    switch(state) {
+        case 0:
+    		DibujarObjeto(versus);
+    		DibujarObjeto(nave1);
+    		DibujarObjeto(nave2);
+    		CambiarCuadro(versus,i);
+    		CambiarCuadro(nave1,j);
+    		CambiarCuadro(nave2,j);
+    		if(!(frames++%3)) {
+    			i--;
+    			j++;
+    			if(i<0) i=27;
+    			if(j>30) j=1;
+    		}
+    		Frame();
+            if(LeerTeclado(KEY_ENTER)) {
+                state++;
+                Frame(); //Restituye los fondos del menu, para evitar parpadeo
+            	VerPantalla(0);     // Configuracion de paginas inicial
+	            ActivarPantalla(1); // Evita parpadeo por mal sincronismo de paginas
+            	CrearObjeto(jugar,"jugar",0,320,50,152,30,0,0);
+	            CrearObjeto(salir,"salir",1,320,80,152,30,0,0);
+	            CargarFondo("backmenu");
+	       }
+           break;
+        case 1:
+    		DibujarObjeto(jugar);
+    		DibujarObjeto(salir);
+    		Frame();
+    		break;
+    	case 2:
+    		DibujarObjeto(nave1);
+    		CambiarCuadro(nave1,i); // Animacion de la nave
+    		if(!(frames++%4)) {
+    			i++;
+    			if(i>30)
+    				i=1;
+    		}
+    		Frame();
+    		break;
+    	case 3:
+    		break;
+    }
 }
 
 function Jugar() {
@@ -139,10 +147,10 @@ function Jugar() {
 	Frame(); //Restituye los fondos del menu, para evitar parpadeo
 	VerPantalla(0);     // Configuracion de paginas inicial
 	ActivarPantalla(1); // Evita parpadeo por mal sincronismo de paginas
-	CrearObjeto(jugador1,"nave1.bmp",10,100,420,44,56,0,Vnave);
-	CrearObjeto(jugador2,"nave2.bmp",10,540,60,64,52,-180,Vnave);
-	CrearObjeto(laser1,"laser1.bmp",0,0,0,40,40,0,Vlaser);
-	CrearObjeto(laser2,"laser2.bmp",0,0,0,40,40,0,Vlaser);
+	CrearObjeto(jugador1,"nave1",10,100,420,44,56,0,Vnave);
+	CrearObjeto(jugador2,"nave2",10,540,60,64,52,-180,Vnave);
+	CrearObjeto(laser1,"laser1",0,0,0,40,40,0,Vlaser);
+	CrearObjeto(laser2,"laser2",0,0,0,40,40,0,Vlaser);
 	CargarFondo("fondo");
 
 	canvas.onkeydown = function(key) {
@@ -178,7 +186,7 @@ function Jugar() {
 			{
 				explotando1=0;
 				if(vidas1==0) break;
-				CrearObjeto(jugador1,"nave1.bmp",10,100,420,44,56,0,Vnave);
+				CrearObjeto(jugador1,"nave1",10,100,420,44,56,0,Vnave);
 			}
 		}
 		if(!explotando2) {
@@ -203,7 +211,7 @@ function Jugar() {
 			if(i<0) {
 				explotando2=0;
 				if(vidas2==0) break;
-				CrearObjeto(jugador2,"nave2.bmp",10,540,60,64,52,-180,Vnave);
+				CrearObjeto(jugador2,"nave2",10,540,60,64,52,-180,Vnave);
 			}
 		}
 		if(disparar1) AvanzarObjeto(laser1);
@@ -214,22 +222,22 @@ function Jugar() {
 		if(Colision(jugador1,jugador2) && !explotando1 && !explotando2) {
 			vidas1--;
 			vidas2--;
-			CrearObjeto(jugador1,"explo.bmp",17,jugador1.x,jugador1.y,64,64,0,0);
-			CrearObjeto(jugador2,"explo.bmp",17,jugador2.x,jugador2.y,64,64,0,0);
+			CrearObjeto(jugador1,"explo",17,jugador1.x,jugador1.y,64,64,0,0);
+			CrearObjeto(jugador2,"explo",17,jugador2.x,jugador2.y,64,64,0,0);
 			j=i=16;
 			explotando1=1;
 			explotando2=1;
 		}
 		if(Colision(jugador1,laser2) && !explotando1 && disparar2==1) {
 			vidas1--;
-			CrearObjeto(jugador1,"explo.bmp",17,jugador1.x,jugador1.y,64,64,0,0);
+			CrearObjeto(jugador1,"explo",17,jugador1.x,jugador1.y,64,64,0,0);
 			j=16;
 			explotando1=1;
 			disparar2=0;
 		}
 		if(Colision(laser1,jugador2) && !explotando2 && disparar1==1) {
 			vidas2--;
-			CrearObjeto(jugador2,"explo.bmp",17,jugador2.x,jugador2.y,64,64,0,0);
+			CrearObjeto(jugador2,"explo",17,jugador2.x,jugador2.y,64,64,0,0);
 			i=16;
 			explotando2=1;
 			disparar1=0;
