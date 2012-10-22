@@ -1,9 +1,13 @@
-var paleta = [];
-
 var pantalla_visible=0;
 var pantalla_activa=0;
-var pixel;
-var pixelData;
+var buf0, buf1;
+
+function Inicializacion() {
+    window.buf0 = window.context.createImageData(640, 480);
+	window.buf1 = window.context.createImageData(640, 480);
+	window.VerPantalla(0);     // Esta es la configuracion de
+	window.ActivarPantalla(1); // paginas inicial
+}
 
 function Pixel(x, y, r, g, b, a)
 {
@@ -30,4 +34,8 @@ function VerPantalla(pantalla)
 	else
 		context.putImageData(buf0, 0, 0);
 	pantalla_visible = pantalla;
+}
+
+function ActivarPantalla(p) { 
+    pantalla_activa = (p==1 || p==0) ? p : -1
 }

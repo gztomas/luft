@@ -1,3 +1,5 @@
+var PI = 3.141593;
+
 function MoverObjeto(objeto, x, y) {
 	objeto.x += x; // Las ultimas cuatro lineas evitan que
 	objeto.y += y; // el objeto se salga de la pantalla
@@ -57,25 +59,27 @@ function CrearObjeto(objeto, bitmap, cuadro, xinicial, yinicial, ancho, alto, an
 
 function CambiarCuadro(objeto, cuadro)
 {
-    cuadro = objeto.cuadros - cuadro;
+    cuadro = objeto.cuadros - 1 - cuadro;
 	objeto.imagen.data.set(objeto.archivo.data.subarray(cuadro * objeto.alto * objeto.ancho * 4, (cuadro+1) * objeto.alto * objeto.ancho * 4));
 }
 
 function DibujarObjeto(objeto)
 {
 	var x, y, x1, y1, coordx, coordy, centrox, centroy;
-	var cosT = Math.cos(3.141593*objeto.angulo/180);
-	var sinT = Math.sin(3.141593*objeto.angulo/180);
+	var cosT = Math.cos(PI*objeto.angulo/180);
+	var sinT = Math.sin(PI*objeto.angulo/180);
 	centrox=objeto.ancho>>1;
 	centroy=objeto.alto>>1;
-	coordx=objeto.x-centrox;
-	coordy=objeto.y-centroy;
+	coordx=Math.floor(objeto.x-centrox);
+	coordy=Math.floor(objeto.y-centroy);
 	window.AgregarBuffer(objeto.ancho, objeto.alto, coordx, coordy);
     var data = objeto.imagen.data;
 	for (y = 0 ; y < objeto.alto ; y++)
 		for (x = 0; x < objeto.ancho; x++) {
-			x1 = ( x - centrox ) * cosT + ( y - centroy ) * sinT + objeto.ancho * 0.5;
-			y1 = ( y - centroy ) * cosT - ( x - centrox ) * sinT + objeto.alto * 0.5;
+			x1 = Math.floor(( x - centrox ) * cosT + ( y - centroy ) * sinT);
+            y1 = Math.floor(( y - centroy ) * cosT - ( x - centrox ) * sinT);
+            x1 = Math.floor(x1 + objeto.ancho * 0.5);
+            y1 = Math.floor(y1 + objeto.alto * 0.5);
             var offset = x1 * 4 + y1 * 4 * objeto.ancho;
 			if(x1 > 0 && y1 > 0 && x1 < objeto.ancho && y1 < objeto.alto && (data[offset+0] || data[offset+1] || data[offset+2]))
 				window.Pixel(x+coordx,y+coordy,
