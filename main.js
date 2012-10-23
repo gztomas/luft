@@ -21,7 +21,7 @@ var jugador2 = {};
 var laser1 = {};
 var laser2 = {};
 
-var seleccion = 1,i=27,j=0, ganador; 
+var seleccion = 1,i=27,j=0, ganador;
 
 function main() {
 
@@ -41,8 +41,8 @@ function main() {
 
 	CargarFondo("intro");
 	CrearObjeto(versus,"versus",27,320,280,64,84,0,0);
-	CrearObjeto(nave1,"nave1A",0,180,280,64,64,0,0);
-	CrearObjeto(nave2,"nave2A",0,460,280,80,68,0,0);
+	CrearObjeto(nave1,"nave2big",0,180,280,64,64,0,0);
+	CrearObjeto(nave2,"nave1big",0,460,280,80,68,0,0);
     
     setInterval(function() {
         Menu();
@@ -187,10 +187,10 @@ function Menu() {
     				i=0;
 					frames = 0;
                     CargarFondo("ganador");
-					if(ganador==GANADOR1)
-						CrearObjeto(nave1,"nave1A",0,320,300,64,64,0,0);
+					if(ganador==GANADOR2)
+						CrearObjeto(nave1,"nave2big",0,320,300,64,64,0,0);
 					else
-						CrearObjeto(nave1,"nave2A",0,320,300,80,68,0,0);
+						CrearObjeto(nave1,"nave1big",0,320,300,80,68,0,0);
                 }
                 state += 1;
             }
