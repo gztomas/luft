@@ -60,7 +60,16 @@ function CrearObjeto(objeto, bitmap, cuadro, xinicial, yinicial, ancho, alto, an
 function CambiarCuadro(objeto, cuadro)
 {
     cuadro = objeto.cuadros - 1 - cuadro;
-	objeto.imagen.data.set(objeto.archivo.data.subarray(cuadro * objeto.alto * objeto.ancho * 4, (cuadro+1) * objeto.alto * objeto.ancho * 4));
+    var start = cuadro * objeto.alto * objeto.ancho * 4;
+    var end = (cuadro + 1) * objeto.alto * objeto.ancho * 4;
+    var source = objeto.archivo.data.subarray ?
+        objeto.archivo.data.subarray(start, end) :
+        new Uint8Array(objeto.archivo.data.slice(start, end));
+    
+    if(objeto.imagen.data.set)
+        objeto.imagen.data.set(source);
+    else
+        objeto.imagen.data = source;
 }
 
 function DibujarObjeto(objeto)
