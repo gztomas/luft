@@ -8,10 +8,6 @@ var BUFFER = function() {
     this.direccion = 0;
 };
 
-borradorpag[0] = {
-}
-
-
 function DibujarBitmap(nombre, ancho, alto)
 {
 	window.context.drawImage(document.getElementById(nombre), 0, 0);
@@ -47,7 +43,7 @@ function AgregarBuffer(ancho, alto, X, Y)
 	i=indice[pantalla_activa];
     if(!borradorpag[pantalla_activa][i])
         borradorpag[pantalla_activa][i] = new BUFFER();        
-	borradorpag[pantalla_activa][i].direccion = new Uint8ClampedArray(ancho*alto*4);
+	borradorpag[pantalla_activa][i].direccion = new Uint8Array(ancho*alto*4);
 	borradorpag[pantalla_activa][i].x=X;
 	borradorpag[pantalla_activa][i].y=Y;
 	borradorpag[pantalla_activa][i].ancho=ancho;

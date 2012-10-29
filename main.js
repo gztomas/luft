@@ -6,7 +6,6 @@ var Vlaser = 20;
 var EMPATE = 0;
 var GANADOR1 = 1;
 var GANADOR2 = 2;
-var CANCELAR = 3;
 
 var context;
 var state = 0;
@@ -16,13 +15,13 @@ var nave2 = {};
 var frames = 0;   
 var salir = {};
 var jugar = {};
-var disparar1=0, disparar2=0, explotando1=0, explotando2=0, vidas1=VIDAS, vidas2=VIDAS, i=0, j=0;
+var disparar1=0, disparar2=0, explotando1=0, explotando2=0, vidas1=VIDAS, vidas2=VIDAS;
 var jugador1 = {};
 var jugador2 = {};
 var laser1 = {};
 var laser2 = {};
 
-var seleccion = 1,i=27,j=0, ganador; 
+var seleccion = 1,i=27,j=0, ganador;
 
 function main() {
 
@@ -42,8 +41,8 @@ function main() {
 
 	CargarFondo("intro");
 	CrearObjeto(versus,"versus",27,320,280,64,84,0,0);
-	CrearObjeto(nave1,"nave1A",0,180,280,64,64,0,0);
-	CrearObjeto(nave2,"nave2A",0,460,280,80,68,0,0);
+	CrearObjeto(nave1,"nave2big",0,180,280,64,64,0,0);
+	CrearObjeto(nave2,"nave1big",0,460,280,80,68,0,0);
     
     setInterval(function() {
         Menu();
@@ -172,7 +171,7 @@ function Menu() {
     			if(i<0) {
     				explotando2=0;
     				if(vidas2!=0)
-    				    CrearObjeto(jugador2,"nave2",10,540,60,64,52,-180,Vnave);;
+    				    CrearObjeto(jugador2,"nave2",10,540,60,64,52,-180,Vnave);
     			}
     		}
             if(vidas1==0 || vidas2==0) {
@@ -188,10 +187,10 @@ function Menu() {
     				i=0;
 					frames = 0;
                     CargarFondo("ganador");
-					if(ganador==GANADOR1)
-						CrearObjeto(nave1,"nave1A",0,320,300,64,64,0,0);
+					if(ganador==GANADOR2)
+						CrearObjeto(nave1,"nave2big",0,320,300,64,64,0,0);
 					else
-						CrearObjeto(nave1,"nave2A",0,320,300,80,68,0,0);
+						CrearObjeto(nave1,"nave1big",0,320,300,80,68,0,0);
                 }
                 state += 1;
             }
@@ -251,18 +250,10 @@ function Menu() {
     			CrearObjeto(jugar,"jugar",0,320,50,152,30,0,0);
     			CrearObjeto(salir,"salir",1,320,80,152,30,0,0);
     			CargarFondo("backmenu");
-                disparar1=0, disparar2=0, explotando1=0, explotando2=0, vidas1=VIDAS, vidas2=VIDAS, i=0, j=0;
+                disparar1 = disparar2 = explotando1 = explotando2 = i = j = 0;
+				vidas1 = vidas2 = VIDAS;
                 state = 1;
             }
             break;
     }
-}
-
-var GameState = function() {
-    this.init = function() {
-    };
-    this.process = function() {
-    }
-    this.end = function() {
-    };
 }
