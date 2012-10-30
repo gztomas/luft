@@ -1,21 +1,15 @@
-var Renderable = function (imageId, cuadro, x, y, ancho, alto, angulo, velocidad) {
-	var _this = this;
+var Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
+	
+    var _this = this;
 	this.x = x;
 	this.y = y;
 	this.angulo = angulo;
-	var file = document.getElementById(imageId);
-	var cuadros = file.height / alto;
-	var auxCanvas = document.getElementById("auxCanvas");
-	if(!auxCanvas) {
-		auxCanvas = document.createElement("canvas");
-		auxCanvas.id = "auxCanvas";
-	}
-	auxCanvas.style.width = auxCanvas.width = file.width;
-	auxCanvas.style.height = auxCanvas.height = file.height;
-	var auxContext = auxCanvas.getContext("2d");
-	auxContext.drawImage(document.getElementById(imageId), 0, 0, file.width, file.height);
-	var archivo = auxContext.getImageData(0, 0, file.width, file.height);
-	var imagen = auxContext.createImageData(ancho, alto);
+    
+	var cuadros = image.height / alto;
+	var archivo = image.data;
+    var frameImage = new Image();
+    frameImage.create(ancho, alto);
+	var imagen = frameImage.data;
 
 	this.setFrame = function (newFrame) {
 		newFrame = cuadros - 1 - newFrame;
