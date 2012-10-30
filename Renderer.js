@@ -19,7 +19,7 @@ var Renderer = function () {
 		this.direccion = 0;
 	};
 
-	this.init = function () {
+	this.init = function() {
 		canvas = window.document.createElement("canvas");
 		canvas.style.width = "640px";
 		canvas.style.height = "480px";
@@ -33,8 +33,8 @@ var Renderer = function () {
 		context = canvas.getContext("2d");
 		buf0 = context.createImageData(640, 480);
 		buf1 = context.createImageData(640, 480);
-		_this.setFrontBuffer(0);	// Esta es la configuracion de
-		_this.setBackBuffer(1);		// paginas inicial
+		_this.setFrontBuffer(0);
+		_this.setBackBuffer(1);
 	};
 
 	this.setPixel = function (x, y, r, g, b, a) {
@@ -101,40 +101,47 @@ var Renderer = function () {
 		indice[pantalla_activa] = 0;
 	};
 
-	this.AgregarBuffer = function (ancho, alto, X, Y) {
+	this.backup = function(ancho, alto, X, Y) {
 		var x, y, i;
 
 		i = indice[pantalla_activa];
-		if (!borradorpag[pantalla_activa][i])
+		if(!borradorpag[pantalla_activa][i])
 			borradorpag[pantalla_activa][i] = new BUFFER();
 		borradorpag[pantalla_activa][i].direccion = new Uint8Array(ancho * alto * 4);
 		borradorpag[pantalla_activa][i].x = X;
 		borradorpag[pantalla_activa][i].y = Y;
 		borradorpag[pantalla_activa][i].ancho = ancho;
 		borradorpag[pantalla_activa][i].alto = alto;
-		for (y = 0; y < alto; y++)
-			for (x = 0; x < ancho; x++) {
+		for(y = 0; y < alto; y++) {
+			for(x = 0; x < ancho; x++) {
 				borradorpag[pantalla_activa][i].direccion[x * 4 + y * 4 * ancho + 0] = _this.getPixel(x + X, y + Y).r;
 				borradorpag[pantalla_activa][i].direccion[x * 4 + y * 4 * ancho + 1] = _this.getPixel(x + X, y + Y).g;
 				borradorpag[pantalla_activa][i].direccion[x * 4 + y * 4 * ancho + 2] = _this.getPixel(x + X, y + Y).b;
 				borradorpag[pantalla_activa][i].direccion[x * 4 + y * 4 * ancho + 3] = _this.getPixel(x + X, y + Y).a;
 			}
+		}
 		indice[pantalla_activa]++;
 	};
 
-	this.DibujarBitmap = function (nombre, ancho, alto) {
+	this.draw = function(nombre, ancho, alto) {
 		context.drawImage(document.getElementById(nombre), 0, 0);
 		var fp = context.getImageData(0, 0, ancho, alto);
-		var i, j;
-		for (i = alto - 1; i >= 0; i--)
-			for (j = 0; j < ancho; j++)
-				_this.setPixel(j, i, fp.data[j * 4 + i * 4 * ancho + 0], fp.data[j * 4 + i * 4 * ancho + 1], fp.data[j * 4 + i * 4 * ancho + 2], fp.data[j * 4 + i * 4 * ancho + 3]);
+		for(var i = alto - 1; i >= 0; i--) {
+			for(var j = 0; j < ancho; j++) {
+				_this.setPixel(j, i,
+					fp.data[j * 4 + i * 4 * ancho + 0],
+					fp.data[j * 4 + i * 4 * ancho + 1],
+					fp.data[j * 4 + i * 4 * ancho + 2],
+					fp.data[j * 4 + i * 4 * ancho + 3]
+				);
+			}
+		}
 	};
 
-	this.CargarFondo = function (archivo) {
-		_this.setBackBuffer(0);               // El fondo debe dibujarse en las dos
-		_this.DibujarBitmap(archivo, 640, 480); // pantallas de video, de otro modo
-		_this.setBackBuffer(1);               // se observaria un parpadeo
-		_this.DibujarBitmap(archivo, 640, 480);
+	this.drawBackground = function(archivo) {
+		_this.setBackBuffer(0);
+		_this.draw(archivo, 640, 480);
+		_this.setBackBuffer(1);
+		_this.draw(archivo, 640, 480);
 	};
 };

@@ -6,7 +6,7 @@ var Renderable = function (imageId, cuadro, x, y, ancho, alto, angulo, velocidad
 	var file = document.getElementById(imageId);
 	var cuadros = file.height / alto;
 	var auxCanvas = document.getElementById("auxCanvas");
-	if (!auxCanvas) {
+	if(!auxCanvas) {
 		auxCanvas = document.createElement("canvas");
 		auxCanvas.id = "auxCanvas";
 	}
@@ -25,7 +25,7 @@ var Renderable = function (imageId, cuadro, x, y, ancho, alto, angulo, velocidad
 			archivo.data.subarray(start, end) :
 			new Uint8Array(archivo.data.slice(start, end));
 
-		if (imagen.data.set)
+		if(imagen.data.set)
 			imagen.data.set(source);
 		else
 			imagen.data = source;
@@ -38,16 +38,16 @@ var Renderable = function (imageId, cuadro, x, y, ancho, alto, angulo, velocidad
 		var centroy = alto / 2;
 		var coordx = Math.floor(_this.x - centrox);
 		var coordy = Math.floor(_this.y - centroy);
-		renderer.AgregarBuffer(ancho, alto, coordx, coordy);
+		renderer.backup(ancho, alto, coordx, coordy);
 		var data = imagen.data;
-		for (var v = 0; v < alto; v++) {
-			for (var h = 0; h < ancho; h++) {
+		for(var v = 0; v < alto; v++) {
+			for(var h = 0; h < ancho; h++) {
 				var x1 = Math.floor((h - centrox) * cosT + (v - centroy) * sinT);
 				var y1 = Math.floor((v - centroy) * cosT - (h - centrox) * sinT);
 				x1 = Math.floor(x1 + ancho * 0.5);
 				y1 = Math.floor(y1 + alto * 0.5);
 				var offset = x1 * 4 + y1 * 4 * ancho;
-				if (x1 > 0 && y1 > 0 && x1 < ancho && y1 < alto && (data[offset + 0] || data[offset + 1] || data[offset + 2]))
+				if(x1 > 0 && y1 > 0 && x1 < ancho && y1 < alto && (data[offset + 0] || data[offset + 1] || data[offset + 2]))
 					renderer.setPixel(h + coordx, v + coordy,
 						data[offset + 0],
 						data[offset + 1],
@@ -73,10 +73,10 @@ var Renderable = function (imageId, cuadro, x, y, ancho, alto, angulo, velocidad
 		var margeny1 = alto * 0.35;
 		var margenx2 = renderable.getSize()[0] * 0.35;
 		var margeny2 = renderable.getSize()[1] * 0.35;
-		return 	_this.x + margenx1 > renderable.getPosition()[0] - margenx2 &&
-				_this.x - margenx1 < renderable.getPosition()[0] + margenx2 &&
-				_this.y + margeny1 > renderable.getPosition()[1] - margeny2 &&
-				_this.y - margeny1 < renderable.getPosition()[1] + margeny2;
+		return     _this.x + margenx1 > renderable.getPosition()[0] - margenx2 &&
+			_this.x - margenx1 < renderable.getPosition()[0] + margenx2 &&
+			_this.y + margeny1 > renderable.getPosition()[1] - margeny2 &&
+			_this.y - margeny1 < renderable.getPosition()[1] + margeny2;
 	};
 
 	this.getSize = function () {
@@ -90,10 +90,10 @@ var Renderable = function (imageId, cuadro, x, y, ancho, alto, angulo, velocidad
 	var move = function (h, v) {
 		_this.x += h; // Las ultimas cuatro lineas evitan que
 		_this.y += v; // el objeto se salga de la pantalla
-		if (_this.x + ancho * 0.5 > 630) _this.x = 630 - ancho * 0.5;
-		if (_this.x - ancho * 0.5 < 10) _this.x = 10 + ancho * 0.5;
-		if (_this.y + alto * 0.5 > 470) _this.y = 470 - alto * 0.5;
-		if (_this.y - alto * 0.5 < 10) _this.y = 10 + alto * 0.5;
+		if(_this.x + ancho * 0.5 > 630) _this.x = 630 - ancho * 0.5;
+		if(_this.x - ancho * 0.5 < 10) _this.x = 10 + ancho * 0.5;
+		if(_this.y + alto * 0.5 > 470) _this.y = 470 - alto * 0.5;
+		if(_this.y - alto * 0.5 < 10) _this.y = 10 + alto * 0.5;
 	};
 
 	this.setFrame(cuadro);

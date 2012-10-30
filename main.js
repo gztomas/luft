@@ -18,7 +18,7 @@ var renderer = new Renderer();
 
 function main() {
 	renderer.init();
-	renderer.CargarFondo("intro");
+	renderer.drawBackground("intro");
 	versus = new Renderable("versus", 27, 320, 280, 64, 84, 0, 0);
 	nave1 = new Renderable("nave2big", 0, 180, 280, 64, 64, 0, 0);
 	nave2 = new Renderable("nave1big", 0, 460, 280, 80, 68, 0, 0);
@@ -51,7 +51,7 @@ function Menu() {
 				renderer.setBackBuffer(1); // Evita parpadeo por mal sincronismo de paginas
 				jugar = new Renderable("jugar", 0, 320, 50, 152, 30, 0, 0);
 				salir = new Renderable("salir", 1, 320, 80, 152, 30, 0, 0);
-				renderer.CargarFondo("backmenu");
+				renderer.drawBackground("backmenu");
 			}
 			break;
 		case 1:
@@ -79,7 +79,7 @@ function Menu() {
 					jugador2 = new Renderable("nave2", 10, 540, 60, 64, 52, -180, Vnave);
 					laser1 = new Renderable("laser1", 0, 0, 0, 40, 40, 0, Vlaser);
 					laser2 = new Renderable("laser2", 0, 0, 0, 40, 40, 0, Vlaser);
-					renderer.CargarFondo("fondo");
+					renderer.drawBackground("fondo");
 				}
 			}
 			break;
@@ -156,13 +156,13 @@ function Menu() {
 				renderer.setBackBuffer(1); // Evita parpadeo de menu
 				if(vidas1 == 0 && vidas2 == 0) {
 					ganador = EMPATE;
-					renderer.CargarFondo("empate");
+					renderer.drawBackground("empate");
 				}
 				else {
 					ganador = vidas1 == 0 ? GANADOR2 : GANADOR1;
 					i = 0;
 					frames = 0;
-					renderer.CargarFondo("ganador");
+					renderer.drawBackground("ganador");
 					if(ganador == GANADOR2)
 						nave1 = new Renderable("nave2big", 0, 320, 300, 64, 64, 0, 0);
 					else
@@ -229,7 +229,7 @@ function Menu() {
 				renderer.setBackBuffer(1); // Evita parpadeo de menu
 				jugar = new Renderable("jugar", 0, 320, 50, 152, 30, 0, 0);
 				salir = new Renderable("salir", 1, 320, 80, 152, 30, 0, 0);
-				renderer.CargarFondo("backmenu");
+				renderer.drawBackground("backmenu");
 				disparar1 = disparar2 = explotando1 = explotando2 = i = j = 0;
 				vidas1 = vidas2 = VIDAS;
 				state = 1;
