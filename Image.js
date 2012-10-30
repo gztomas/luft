@@ -1,7 +1,6 @@
 var Image = function() {
     var _this = this;
-    this.data;    
-    
+
     var getAuxContext = function() {
         if(!Image.auxCanvas) {
     		Image.auxCanvas = document.createElement("canvas");
@@ -12,15 +11,25 @@ var Image = function() {
     };
     
     this.load = function(url, progressCallback) {
-        node = document.createElement("img");
-        node.onprogress = function(e) {
-            progressCallback(url, e);
-        };
-        node.src = url;
-        _this.height = node.height;
-        _this.width = node.width;
-        getAuxContext().drawImage(node, 0, 0, _this.width, _this.height);
-        _this.data = Image.auxContext.getImageData(0, 0, _this.width, _this.height);
+		var request = new XMLHttpRequest();
+		//request.onloadstart = showProgressBar;
+		request.onprogress = function(e) {
+			progressCallback(url, e);
+		};
+		request.onload =  function() {
+			var node = document.createElement("img");
+			node.src = url;
+			node.onload = function() {
+				_this.height = node.height;
+				_this.width = node.width;
+				getAuxContext().drawImage(node, 0, 0, _this.width, _this.height);
+				_this.data = getAuxContext().getImageData(0, 0, _this.width, _this.height);
+			};
+		};
+		//request.onloadend = hideProgressBar;
+		request.open("GET", url, true);
+		request.overrideMimeType('text/plain; charset=x-user-defined');
+		request.send(null);
     };
     
     this.create = function(width, height) {
@@ -29,4 +38,31 @@ var Image = function() {
         _this.data = getAuxContext().createImageData(width, height);
     };
 };
-Image.auxCanvas;
+
+var ImageManager = new function() {
+
+	var progressBar = document.createElement("progress");
+	progressBar.value = 0;
+	progressBar.max = 100;
+	progressBar.removeAttribute("value");
+	document.body.appendChild(progressBar);
+
+	var loading = {};
+
+	var progressCallback = function(url, e) {
+		loading[url] = e;
+		var loaded = 0;
+		var total = 0;
+		for(var i in loading) {
+			loaded += loading[i].loaded;
+			total += loading[i].total;
+		}
+		progressBar.value = loaded / total * 100;
+	};
+	var resourceNames = ["intro", "versus", "nave1", "nave2", "nave1big", "nave2big", "jugar", "salir", "backmenu", "empate", "explo", "fondo", "ganador", "laser1", "laser2"];
+	var images = {};
+	for(var i = 0; i < resourceNames.length; i++) {
+		images[resourceNames[i]] = new Image();
+		images[resourceNames[i]].load("image/" + resourceNames[i] + ".bmp", progressCallback);
+	}
+};
