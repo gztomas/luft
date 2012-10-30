@@ -23,85 +23,70 @@ var laser2 = {};
 
 var seleccion = 1,i=27,j=0, ganador;
 
+var renderer = new Renderer();
+
 function main() {
-
-	var canvas = window.document.createElement("canvas");
-	canvas.style.width = "640px";
-	canvas.style.height = "480px";
-	canvas.style.marginLeft = 'auto';
-	canvas.style.marginRight = 'auto';
-	canvas.style.marginTop = 'auto';
-	canvas.style.marginBottom = 'auto';
-	window.document.body.insertBefore(canvas, window.document.body.firstChild);
-	canvas.width = 640;
-	canvas.height = 480;
-	context = canvas.getContext("2d");
-
-	Inicializacion();
-
-	CargarFondo("intro");
-	CrearObjeto(versus,"versus",27,320,280,64,84,0,0);
-	CrearObjeto(nave1,"nave2big",0,180,280,64,64,0,0);
-	CrearObjeto(nave2,"nave1big",0,460,280,80,68,0,0);
-    
-    setInterval(function() {
-        Menu();
-    }, 1)
+	renderer.init();
+	renderer.CargarFondo("intro");
+	versus = new Renderable("versus", 27, 320, 280, 64, 84, 0, 0);
+	nave1 = new Renderable("nave2big", 0, 180, 280, 64, 64, 0, 0);
+	nave2 = new Renderable("nave1big", 0, 460, 280, 80, 68, 0, 0);
+	setInterval(Menu, 1);
 }
     
 function Menu() {   
     switch(state) {
         case 0:
-    		DibujarObjeto(versus);
-    		DibujarObjeto(nave1);
-    		DibujarObjeto(nave2);
-    		CambiarCuadro(versus,i);
-    		CambiarCuadro(nave1,j);
-    		CambiarCuadro(nave2,j);
+    		versus.draw(renderer);
+    		nave1.draw(renderer);
+    		nave2.draw(renderer);
+			versus.setFrame(i);
+			nave1.setFrame(j);
+			nave2.setFrame(j);
     		if(!(frames++%3)) {
     			i--;
     			j++;
     			if(i<0) i=27;
     			if(j>30) j=1;
     		}
-    		Frame();
-            if(LeerTeclado(KEY_ENTER)) {
-                LimpiarTeclado();
+			renderer.renderFrame();
+            if(Keyboard.read(KEY_ENTER)) {
+                Keyboard.flush();
                 state++;
-                Frame(); //Restituye los fondos del menu, para evitar parpadeo
-            	VerPantalla(0);     // Configuracion de paginas inicial
-	            ActivarPantalla(1); // Evita parpadeo por mal sincronismo de paginas
-            	CrearObjeto(jugar,"jugar",0,320,50,152,30,0,0);
-	            CrearObjeto(salir,"salir",1,320,80,152,30,0,0);
-	            CargarFondo("backmenu");
+                renderer.renderFrame(); //Restituye los fondos del menu, para evitar parpadeo
+            	renderer.setFrontBuffer(0);     // Configuracion de paginas inicial
+	            renderer.setBackBuffer(1); // Evita parpadeo por mal sincronismo de paginas
+            	jugar = new Renderable("jugar",0,320,50,152,30,0,0);
+	            salir = new Renderable("salir",1,320,80,152,30,0,0);
+	            renderer.CargarFondo("backmenu");
 	       }
            break;
         case 1:
-    		DibujarObjeto(jugar);
-    		DibujarObjeto(salir);
-    		Frame();
-            if(LeerTeclado(KEY_UP)) {
-    			CambiarCuadro(jugar,0); // Activa la palabra "jugar"
-				CambiarCuadro(salir,1); // Desactiva "salir"
-				seleccion=1;
+    		jugar.draw(renderer);
+    		salir.draw(renderer);
+    		renderer.renderFrame();
+            if(Keyboard.read(KEY_UP)) {
+    			jugar.setFrame(0); // Activa la palabra "jugar"
+				salir.setFrame(1); // Desactiva "salir"
+				seleccion = 1;
             }
-            if(LeerTeclado(KEY_DOWN)) {
-                CambiarCuadro(jugar,1); // Desactiva "jugar"
-				CambiarCuadro(salir,0); // Activa "salir"
-				seleccion=2;
+            if(Keyboard.read(KEY_DOWN)) {
+                jugar.setFrame(1); // Desactiva "jugar"
+				salir.setFrame(0); // Activa "salir"
+				seleccion = 2;
             }
-            if(LeerTeclado(KEY_ENTER)) { //Si se presiona la tecla enter
-                LimpiarTeclado();
+            if(Keyboard.read(KEY_ENTER)) { //Si se presiona la tecla enter
+                Keyboard.flush();
     			if(seleccion==1) { // Si estaba activado "jugar"
                     state++;
-                    Frame(); //Restituye los fondos del menu, para evitar parpadeo
-                	VerPantalla(0);     // Configuracion de paginas inicial
-                	ActivarPantalla(1); // Evita parpadeo por mal sincronismo de paginas
-                	CrearObjeto(jugador1,"nave1",10,100,420,44,56,0,Vnave);
-                	CrearObjeto(jugador2,"nave2",10,540,60,64,52,-180,Vnave);
-                	CrearObjeto(laser1,"laser1",0,0,0,40,40,0,Vlaser);
-                	CrearObjeto(laser2,"laser2",0,0,0,40,40,0,Vlaser);
-                	CargarFondo("fondo");                    
+                    renderer.renderFrame(); //Restituye los fondos del menu, para evitar parpadeo
+                	renderer.setFrontBuffer(0);     // Configuracion de paginas inicial
+                	renderer.setBackBuffer(1); // Evita parpadeo por mal sincronismo de paginas
+                	jugador1 = new Renderable("nave1",10,100,420,44,56,0,Vnave);
+                	jugador2 = new Renderable("nave2",10,540,60,64,52,-180,Vnave);
+                	laser1 = new Renderable("laser1",0,0,0,40,40,0,Vlaser);
+                	laser2 = new Renderable("laser2",0,0,0,40,40,0,Vlaser);
+                	renderer.CargarFondo("fondo");
 				}
             }
     		break;
