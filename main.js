@@ -110,7 +110,7 @@ function Menu() {
     			jugador1.setFrame(10-j);
     		}
     		else {
-    			jugador1.setFrame(jugador1,j--);
+    			jugador1.setFrame(j--);
     			if(j<0) {
     				explotando1=0;
     				if(vidas1!=0)

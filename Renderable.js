@@ -30,12 +30,12 @@ var Renderable = function(imageId, cuadro, x, y, ancho, alto, angulo, velocidad)
 	};
 
 	this.draw = function(renderer) {
-		var cosT = Math.cos(Math.PI * angulo / 180);
-		var sinT = Math.sin(Math.PI * angulo / 180);
+		var cosT = Math.cos(Math.PI * _this.angulo / 180);
+		var sinT = Math.sin(Math.PI * _this.angulo / 180);
 		var centrox = ancho / 2;
 		var centroy = alto / 2;
-		var coordx = Math.floor(x - centrox);
-		var coordy = Math.floor(y - centroy);
+		var coordx = Math.floor(_this.x - centrox);
+		var coordy = Math.floor(_this.y - centroy);
 		renderer.AgregarBuffer(ancho, alto, coordx, coordy);
 		var data = imagen.data;
 		for(var v = 0 ; v < alto ; v++) {
@@ -57,14 +57,13 @@ var Renderable = function(imageId, cuadro, x, y, ancho, alto, angulo, velocidad)
 	};
 
 	this.moveForward = function() {
-		var cosT = Math.cos(Math.PI * (angulo-90)/180);
-		var sinT = Math.sin(Math.PI * (angulo-90)/180);
+		var cosT = Math.cos(Math.PI * (_this.angulo-90)/180);
+		var sinT = Math.sin(Math.PI * (_this.angulo-90)/180);
 		move(cosT*velocidad, sinT*velocidad);
 	};
 
 	this.rotate = function(alpha) {
-		angulo += alpha;
-		this.angulo = angulo;
+		_this.angulo += alpha;
 	};
 
 	this.isCollisioning = function(renderable) {
@@ -72,10 +71,10 @@ var Renderable = function(imageId, cuadro, x, y, ancho, alto, angulo, velocidad)
 		var margeny1 = alto * 0.35;
 		var margenx2 = renderable.getSize()[0] * 0.35;
 		var margeny2 = renderable.getSize()[1] * 0.35;
-		return 	x + margenx1 > renderable.getPosition()[0] - margenx2 &&
-				x - margenx1 < renderable.getPosition()[0] + margenx2 &&
-				y + margeny1 > renderable.getPosition()[1] - margeny2 &&
-				y - margeny1 < renderable.getPosition()[1] + margeny2;
+		return 	_this.x + margenx1 > renderable.getPosition()[0] - margenx2 &&
+				_this.x - margenx1 < renderable.getPosition()[0] + margenx2 &&
+				_this.y + margeny1 > renderable.getPosition()[1] - margeny2 &&
+				_this.y - margeny1 < renderable.getPosition()[1] + margeny2;
 	};
 
 	this.getSize = function() {
@@ -83,18 +82,16 @@ var Renderable = function(imageId, cuadro, x, y, ancho, alto, angulo, velocidad)
 	};
 
 	this.getPosition = function() {
-		return [x, y];
+		return [_this.x, _this.y];
 	};
 
 	var move = function(h, v) {
-		x += h; // Las ultimas cuatro lineas evitan que
-		y += v; // el objeto se salga de la pantalla
-		this.x = x;
-		this.y = y;
-		if (x + ancho * 0.5 > 630) x = 630 - ancho * 0.5;
-		if (x - ancho * 0.5 < 10) x = 10 + ancho * 0.5;
-		if (y + alto * 0.5 > 470) y = 470 - alto * 0.5;
-		if (y - alto * 0.5 < 10) y = 10 + alto * 0.5;
+		_this.x += h; // Las ultimas cuatro lineas evitan que
+		_this.y += v; // el objeto se salga de la pantalla
+		if (_this.x + ancho * 0.5 > 630) _this.x = 630 - ancho * 0.5;
+		if (_this.x - ancho * 0.5 < 10) _this.x = 10 + ancho * 0.5;
+		if (_this.y + alto * 0.5 > 470) _this.y = 470 - alto * 0.5;
+		if (_this.y - alto * 0.5 < 10) _this.y = 10 + alto * 0.5;
 	};
 
 	this.setFrame(cuadro);
