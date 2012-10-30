@@ -1,6 +1,6 @@
 var Renderable = function(imageId, cuadro, x, y, ancho, alto, angulo, velocidad) {
 	var _this = this;
-
+	this.x = x; this.y = y; this.angulo = angulo;
 	var file = document.getElementById(imageId);
 	var cuadros = file.height / alto;
 	var auxCanvas = document.getElementById("auxCanvas");
@@ -30,24 +30,23 @@ var Renderable = function(imageId, cuadro, x, y, ancho, alto, angulo, velocidad)
 	};
 
 	this.draw = function(renderer) {
-		var x, y, x1, y1, coordx, coordy, centrox, centroy;
 		var cosT = Math.cos(Math.PI * angulo / 180);
 		var sinT = Math.sin(Math.PI * angulo / 180);
-		centrox = ancho / 2;
-		centroy = alto / 2;
-		coordx = Math.floor(x - centrox);
-		coordy = Math.floor(y - centroy);
+		var centrox = ancho / 2;
+		var centroy = alto / 2;
+		var coordx = Math.floor(x - centrox);
+		var coordy = Math.floor(y - centroy);
 		renderer.AgregarBuffer(ancho, alto, coordx, coordy);
 		var data = imagen.data;
-		for (y = 0 ; y < alto ; y++) {
-			for (x = 0; x < ancho; x++) {
-				x1 = Math.floor(( x - centrox ) * cosT + ( y - centroy ) * sinT);
-				y1 = Math.floor(( y - centroy ) * cosT - ( x - centrox ) * sinT);
+		for(var v = 0 ; v < alto ; v++) {
+			for(var h = 0; h < ancho; h++) {
+				var x1 = Math.floor((h - centrox) * cosT + (v - centroy) * sinT);
+				var y1 = Math.floor((v - centroy) * cosT - (h - centrox) * sinT);
 				x1 = Math.floor(x1 + ancho * 0.5);
 				y1 = Math.floor(y1 + alto * 0.5);
 				var offset = x1 * 4 + y1 * 4 * ancho;
 				if(x1 > 0 && y1 > 0 && x1 < ancho && y1 < alto && (data[offset+0] || data[offset+1] || data[offset+2]))
-					renderer.setPixel(x+coordx,y+coordy,
+					renderer.setPixel(h + coordx, v + coordy,
 						data[offset+0],
 						data[offset+1],
 						data[offset+2],
@@ -65,6 +64,7 @@ var Renderable = function(imageId, cuadro, x, y, ancho, alto, angulo, velocidad)
 
 	this.rotate = function(alpha) {
 		angulo += alpha;
+		this.angulo = angulo;
 	};
 
 	this.isCollisioning = function(renderable) {
@@ -89,6 +89,8 @@ var Renderable = function(imageId, cuadro, x, y, ancho, alto, angulo, velocidad)
 	var move = function(h, v) {
 		x += h; // Las ultimas cuatro lineas evitan que
 		y += v; // el objeto se salga de la pantalla
+		this.x = x;
+		this.y = y;
 		if (x + ancho * 0.5 > 630) x = 630 - ancho * 0.5;
 		if (x - ancho * 0.5 < 10) x = 10 + ancho * 0.5;
 		if (y + alto * 0.5 > 470) y = 470 - alto * 0.5;

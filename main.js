@@ -7,19 +7,10 @@ var EMPATE = 0;
 var GANADOR1 = 1;
 var GANADOR2 = 2;
 
-var context;
 var state = 0;
-var versus = {};
-var nave1 = {};
-var nave2 = {};
-var frames = 0;   
-var salir = {};
-var jugar = {};
+var frames = 0;
 var disparar1=0, disparar2=0, explotando1=0, explotando2=0, vidas1=VIDAS, vidas2=VIDAS;
-var jugador1 = {};
-var jugador2 = {};
-var laser1 = {};
-var laser2 = {};
+var versus, nave1, nave2, jugador1, jugador2, laser1, laser2, salir, jugar;
 
 var seleccion = 1,i=27,j=0, ganador;
 
@@ -43,11 +34,13 @@ function Menu() {
 			versus.setFrame(i);
 			nave1.setFrame(j);
 			nave2.setFrame(j);
-    		if(!(frames++%3)) {
+    		if(!(frames++ % 3)) {
     			i--;
     			j++;
-    			if(i<0) i=27;
-    			if(j>30) j=1;
+    			if(i < 0)
+					i = 27;
+    			if(j > 30)
+					j = 1;
     		}
 			renderer.renderFrame();
             if(Keyboard.read(KEY_ENTER)) {
@@ -92,149 +85,152 @@ function Menu() {
     		break;
         case 2:
         	if(!explotando1) { // Si la nave 1 no esta explotando
-    			if(LeerTeclado(KEY_D)) {
-    				GirarObjeto(jugador1,w);
+    			if(Keyboard.read(KEY_D)) {
+    				jugador1.rotate(w);
     				j++;
     			}
     			else if(j>0)
     				j--;
-    			if(LeerTeclado(KEY_A)) {
-    				GirarObjeto(jugador1,-w);
+    			if(Keyboard.read(KEY_A)) {
+    				jugador1.rotate(-w);
     				j--;
     			}
     			else if(j<0)
     				j++;
-    			if(LeerTeclado(KEY_W))
-    				AvanzarObjeto(jugador1);
-    			if(LeerTeclado(KEY_Q) && !disparar1)  // Disparo
-    			{
-    				disparar1=1;
-    				laser1.x=jugador1.x;            //
-    				laser1.y=jugador1.y;            // El disparo toma las coordenadas
-    				laser1.angulo=jugador1.angulo;  //   y angulo de la nave
+    			if(Keyboard.read(KEY_W))
+    				jugador1.moveForward();
+    			if(Keyboard.read(KEY_Q) && !disparar1) { // Disparo
+    				disparar1 = 1;
+    				laser1.x = jugador1.x;            //
+    				laser1.y = jugador1.y;            // El disparo toma las coordenadas
+    				laser1.angulo = jugador1.angulo;  //   y angulo de la nave
     			}
     			if(j>10) j=10;
     			if(j<-10) j=-10;
-    			CambiarCuadro(jugador1,10-j);
+    			jugador1.setFrame(10-j);
     		}
     		else {
-    			CambiarCuadro(jugador1,j--);
+    			jugador1.setFrame(jugador1,j--);
     			if(j<0) {
     				explotando1=0;
     				if(vidas1!=0)
-    				    CrearObjeto(jugador1,"nave1",10,100,420,44,56,0,Vnave);
+    				    jugador1 = new Renderable("nave1",10,100,420,44,56,0,Vnave);
     			}
     		}
     		if(!explotando2) {
-    			if(LeerTeclado(KEY_RIGHT)) {
-                    GirarObjeto(jugador2,w);
+    			if(Keyboard.read(KEY_RIGHT)) {
+                    jugador2.rotate(w);
                     i++;
     			}
     			else if(i>0)
                     i--;
-    			if(LeerTeclado(KEY_LEFT)) {
-                    GirarObjeto(jugador2,-w);
+    			if(Keyboard.read(KEY_LEFT)) {
+                    jugador2.rotate(-w);
                     i--;
     			}
     			else if(i<0)
                     i++;
-    			if(LeerTeclado(KEY_UP))
-                    AvanzarObjeto(jugador2);
-    			if(LeerTeclado(KEY_RSHIFT) && !disparar2)
+    			if(Keyboard.read(KEY_UP))
+                    jugador2.moveForward();
+    			if(Keyboard.read(KEY_RSHIFT) && !disparar2)
     			{
-    				disparar2=1;
-    				laser2.x=jugador2.x;
-    				laser2.y=jugador2.y;
-    				laser2.angulo=jugador2.angulo;
+    				disparar2 = 1;
+    				laser2.x = jugador2.x;
+    				laser2.y = jugador2.y;
+    				laser2.angulo = jugador2.angulo;
     			}
     			if(i>10) i=10;
     			if(i<-10) i=-10;
-    			CambiarCuadro(jugador2,10-i);
+    			jugador2.setFrame(10-i);
     		}
     		else {
-    			CambiarCuadro(jugador2,i--);
+    			jugador2.setFrame(i--);
     			if(i<0) {
     				explotando2=0;
     				if(vidas2!=0)
-    				    CrearObjeto(jugador2,"nave2",10,540,60,64,52,-180,Vnave);
+    				    jugador2 = new Renderable("nave2",10,540,60,64,52,-180,Vnave);
     			}
     		}
             if(vidas1==0 || vidas2==0) {
-                Frame(); // Fuerza restitucion de fondos del juego
-				VerPantalla(0);     // Configuracion de pag inicial
-				ActivarPantalla(1); // Evita parpadeo de menu                
+                renderer.renderFrame(); // Fuerza restitucion de fondos del juego
+				renderer.setFrontBuffer(0);     // Configuracion de pag inicial
+				renderer.setBackBuffer(1); // Evita parpadeo de menu
                 if(vidas1==0 && vidas2==0) {
                     ganador = EMPATE;
-                    CargarFondo("empate");
+                    renderer.CargarFondo("empate");
                 }
                 else {
                     ganador = vidas1 == 0 ? GANADOR2 : GANADOR1;
     				i=0;
 					frames = 0;
-                    CargarFondo("ganador");
+                    renderer.CargarFondo("ganador");
 					if(ganador==GANADOR2)
-						CrearObjeto(nave1,"nave2big",0,320,300,64,64,0,0);
+						nave1 = new Renderable("nave2big",0,320,300,64,64,0,0);
 					else
-						CrearObjeto(nave1,"nave1big",0,320,300,80,68,0,0);
+						nave1 = new Renderable("nave1big",0,320,300,80,68,0,0);
                 }
                 state += 1;
             }
             else {
-        		if(disparar1) AvanzarObjeto(laser1);
-        		if(disparar2) AvanzarObjeto(laser2);
-        		if(disparar1) DibujarObjeto(laser1);
-        		if(disparar2) DibujarObjeto(laser2);
+        		if(disparar1)
+					laser1.moveForward();
+        		if(disparar2)
+					laser2.moveForward();
+        		if(disparar1)
+					laser1.draw(renderer);
+        		if(disparar2)
+					laser2.draw(renderer);
         
-        		if(Colision(jugador1,jugador2) && !explotando1 && !explotando2) {
+        		if(jugador1.isCollisioning(jugador2) && !explotando1 && !explotando2) {
         			vidas1--;
         			vidas2--;
-        			CrearObjeto(jugador1,"explo",17,jugador1.x,jugador1.y,64,64,0,0);
-        			CrearObjeto(jugador2,"explo",17,jugador2.x,jugador2.y,64,64,0,0);
+        			jugador1 = new Renderable("explo",17,jugador1.x,jugador1.y,64,64,0,0);
+        			jugador2 = new Renderable("explo",17,jugador2.x,jugador2.y,64,64,0,0);
         			j=i=16;
         			explotando1=1;
         			explotando2=1;
         		}
-        		if(Colision(jugador1,laser2) && !explotando1 && disparar2==1) {
+        		if(jugador1.isCollisioning(laser2) && !explotando1 && disparar2==1) {
         			vidas1--;
-        			CrearObjeto(jugador1,"explo",17,jugador1.x,jugador1.y,64,64,0,0);
+        			jugador1 = new Renderable("explo",17,jugador1.x,jugador1.y,64,64,0,0);
         			j=16;
         			explotando1=1;
         			disparar2=0;
         		}
-        		if(Colision(laser1,jugador2) && !explotando2 && disparar1==1) {
+        		if(laser1.isCollisioning(jugador2) && !explotando2 && disparar1==1) {
         			vidas2--;
-        			CrearObjeto(jugador2,"explo",17,jugador2.x,jugador2.y,64,64,0,0);
+        			jugador2 = new Renderable("explo",17,jugador2.x,jugador2.y,64,64,0,0);
         			i=16;
         			explotando2=1;
         			disparar1=0;
         		}
         
-        		DibujarObjeto(jugador1);
-        		DibujarObjeto(jugador2);
+        		jugador1.draw(renderer);
+        		jugador2.draw(renderer);
         		if(laser1.y<40 || laser1.y>440 || laser1.x<40 || laser1.x>600) disparar1=0;
         		if(laser2.y<40 || laser2.y>440 || laser2.x<40 || laser2.x>600) disparar2=0;
-        		Frame();
+        		renderer.renderFrame();
             }
             break;
         case 3:
             if(ganador != EMPATE) {
-        	    DibujarObjeto(nave1);
-    		    CambiarCuadro(nave1,i); // Animacion de la nave
+        	    nave1.draw(renderer);
+    		    nave1.setFrame(i); // Animacion de la nave
     		    if(!(frames++%4)) {
         			i++;
     			    if(i>30)
         				i=1;
         		}
             }
-    		Frame();            
-            if(LeerTeclado(KEY_ENTER)) {
-                LimpiarTeclado();
-                Frame(); // Fuerza restitucion de fondos del juego
-    			VerPantalla(0);     // Configuracion de pag inicial
-    			ActivarPantalla(1); // Evita parpadeo de menu
-    			CrearObjeto(jugar,"jugar",0,320,50,152,30,0,0);
-    			CrearObjeto(salir,"salir",1,320,80,152,30,0,0);
-    			CargarFondo("backmenu");
+    		renderer.renderFrame();
+            if(Keyboard.read(KEY_ENTER)) {
+				Keyboard.flush();
+                renderer.renderFrame(); // Fuerza restitucion de fondos del juego
+    			renderer.setFrontBuffer(0);     // Configuracion de pag inicial
+    			renderer.setBackBuffer(1); // Evita parpadeo de menu
+    			jugar = new Renderable("jugar",0,320,50,152,30,0,0);
+    			salir = new Renderable("salir",1,320,80,152,30,0,0);
+    			renderer.CargarFondo("backmenu");
                 disparar1 = disparar2 = explotando1 = explotando2 = i = j = 0;
 				vidas1 = vidas2 = VIDAS;
                 state = 1;
