@@ -10,24 +10,26 @@ var Image = function() {
     	return Image.auxCanvas.getContext("2d");    
     };
     
-    this.load = function(url, progressCallback) {
+    this.load = function(uri, progressCallback) {
+		_this.uri = uri;
 		var request = new XMLHttpRequest();
-		//request.onloadstart = showProgressBar;
-		request.onprogress = function(e) {
-			progressCallback(url, e);
+		request.onloadstart = request.onprogress = function(e) {
+			_this.progress = e;
+			progressCallback(_this);
 		};
-		request.onload =  function() {
+		request.onload =  function(e) {
 			var node = document.createElement("img");
-			node.src = url;
+			node.src = uri;
 			node.onload = function() {
 				_this.height = node.height;
 				_this.width = node.width;
 				getAuxContext().drawImage(node, 0, 0, _this.width, _this.height);
 				_this.data = getAuxContext().getImageData(0, 0, _this.width, _this.height);
+				_this.loaded = true;
+				progressCallback(_this);
 			};
 		};
-		//request.onloadend = hideProgressBar;
-		request.open("GET", url, true);
+		request.open("GET", uri, true);
 		request.overrideMimeType('text/plain; charset=x-user-defined');
 		request.send(null);
     };
@@ -39,30 +41,53 @@ var Image = function() {
     };
 };
 
-var ImageManager = new function() {
+var ImageLoader = function(imageNames, callback) {
+	var _this = this;
+	var images = {};
+	var progressBar;
 
-	var progressBar = document.createElement("progress");
-	progressBar.value = 0;
-	progressBar.max = 100;
-	progressBar.removeAttribute("value");
-	document.body.appendChild(progressBar);
+	var showProgressBar = function() {
+		progressBar = document.createElement("progress");
+		progressBar.value = 0;
+		progressBar.max = 100;
+		progressBar.removeAttribute("value");
+		document.body.appendChild(progressBar);
+	};
 
-	var loading = {};
-
-	var progressCallback = function(url, e) {
-		loading[url] = e;
+	var progressCallback = function() {
+		var end = true;
 		var loaded = 0;
 		var total = 0;
-		for(var i in loading) {
-			loaded += loading[i].loaded;
-			total += loading[i].total;
+		for(var i in images) {
+			end = end && images[i].loaded;
+			if(images[i].progress) {
+				loaded += images[i].progress.loaded;
+				total += images[i].progress.total;
+			}
 		}
-		progressBar.value = loaded / total * 100;
+		if(total)
+			progressBar.value = loaded / total * 100;
+		if(end) {
+			document.body.removeChild(progressBar);
+			callback();
+		}
 	};
-	var resourceNames = ["intro", "versus", "nave1", "nave2", "nave1big", "nave2big", "jugar", "salir", "backmenu", "empate", "explo", "fondo", "ganador", "laser1", "laser2"];
-	var images = {};
-	for(var i = 0; i < resourceNames.length; i++) {
-		images[resourceNames[i]] = new Image();
-		images[resourceNames[i]].load("image/" + resourceNames[i] + ".bmp", progressCallback);
-	}
+
+	var init = function() {
+		showProgressBar();
+		for(var i = 0; i < imageNames.length; i++) {
+			var image = images[imageNames[i]] = new Image();
+			image.load(name2uri(imageNames[i]), progressCallback);
+		}
+	};
+
+	var name2uri = function(name) {
+		return "image/" + name + ".bmp";
+	};
+
+	init();
 };
+
+new ImageLoader(["intro", "versus", "nave1", "nave2", "nave1big", "nave2big", "jugar", "salir", "backmenu", "empate", "explo", "fondo", "ganador", "laser1", "laser2"], function() {
+	alert("ready");
+});
