@@ -5,9 +5,11 @@ var Image = function() {
         if(!Image.auxCanvas) {
     		Image.auxCanvas = document.createElement("canvas");
     	}
-    	Image.auxCanvas.style.width = Image.auxCanvas.width = _this.width;
-    	Image.auxCanvas.style.height = Image.auxCanvas.height = _this.height;
-    	return Image.auxCanvas.getContext("2d");    
+		if(Image.auxCanvas.width != _this.width || Image.auxCanvas.height != _this.height) {
+    		Image.auxCanvas.style.width = Image.auxCanvas.width = _this.width;
+    		Image.auxCanvas.style.height = Image.auxCanvas.height = _this.height;
+		}
+    	return Image.auxCanvas.getContext("2d");
     };
     
     this.load = function(uri, progressCallback) {
@@ -24,7 +26,7 @@ var Image = function() {
 				_this.height = node.height;
 				_this.width = node.width;
 				getAuxContext().drawImage(node, 0, 0, _this.width, _this.height);
-				_this.data = getAuxContext().getImageData(0, 0, _this.width, _this.height);
+				_this.data = getAuxContext().getImageData(0, 0, _this.width, _this.height).data;
 				_this.loaded = true;
 				progressCallback(_this);
 			};
@@ -45,7 +47,7 @@ var Image = function() {
     this.create = function(width, height) {
         _this.height = height;
         _this.width = width;
-        _this.data = getAuxContext().createImageData(width, height);
+        _this.data = getAuxContext().createImageData(width, height).data;
     };
 };
 
@@ -77,7 +79,7 @@ var ImageLoader = function(imageNames, callback) {
 			progressBar.value = loaded / total * 100;
 		if(end) {
 			document.body.removeChild(progressBar);
-			callback();
+			callback(images);
 		}
 	};
 
@@ -95,7 +97,3 @@ var ImageLoader = function(imageNames, callback) {
 
 	init();
 };
-
-new ImageLoader(["intro", "versus", "nave1", "nave2", "nave1big", "nave2big", "jugar", "salir", "backmenu", "empate", "explo", "fondo", "ganador", "laser1", "laser2"], function() {
-	alert("ready");
-});

@@ -15,14 +15,8 @@ var Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
 		newFrame = cuadros - 1 - newFrame;
 		var start = newFrame * alto * ancho * 4;
 		var end = (newFrame + 1) * alto * ancho * 4;
-		var source = archivo.data.subarray ?
-			archivo.data.subarray(start, end) :
-			new Uint8Array(archivo.data.slice(start, end));
-
-		if(imagen.data.set)
-			imagen.data.set(source);
-		else
-			imagen.data = source;
+		var source = archivo.subarray(start, end);
+		imagen.set(source);
 	};
 
 	this.draw = function (renderer) {
@@ -33,7 +27,7 @@ var Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
 		var coordx = Math.floor(_this.x - centrox);
 		var coordy = Math.floor(_this.y - centroy);
 		renderer.backup(ancho, alto, coordx, coordy);
-		var data = imagen.data;
+		var data = imagen;
 		for(var v = 0; v < alto; v++) {
 			for(var h = 0; h < ancho; h++) {
 				var x1 = Math.floor((h - centrox) * cosT + (v - centroy) * sinT);

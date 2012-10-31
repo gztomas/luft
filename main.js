@@ -16,14 +16,19 @@ var seleccion = 1, i = 27, j = 0, ganador;
 
 var renderer = new Renderer();
 
-function main() {
+var images;
+
+new ImageLoader(
+["intro", "versus", "nave1", "nave2", "nave1big", "nave2big", "jugar", "salir", "backmenu",
+ "empate", "explo", "fondo", "ganador", "laser1", "laser2"], function(img) {
+	images = img;
 	renderer.init();
-	renderer.drawBackground("intro");
-	versus = new Renderable("versus", 27, 320, 280, 64, 84, 0, 0);
-	nave1 = new Renderable("nave2big", 0, 180, 280, 64, 64, 0, 0);
-	nave2 = new Renderable("nave1big", 0, 460, 280, 80, 68, 0, 0);
+	renderer.drawBackground(images.intro);
+	versus = new Renderable(images.versus, 27, 320, 280, 64, 84, 0, 0);
+	nave1 = new Renderable(images.nave2big, 0, 180, 280, 64, 64, 0, 0);
+	nave2 = new Renderable(images.nave1big, 0, 460, 280, 80, 68, 0, 0);
 	setInterval(Menu, 1);
-}
+});
 
 function Menu() {
 	switch(state) {
@@ -47,11 +52,9 @@ function Menu() {
 				Keyboard.flush();
 				state++;
 				renderer.renderFrame(); //Restituye los fondos del menu, para evitar parpadeo
-				renderer.setFrontBuffer(0);     // Configuracion de paginas inicial
-				renderer.setBackBuffer(1); // Evita parpadeo por mal sincronismo de paginas
-				jugar = new Renderable("jugar", 0, 320, 50, 152, 30, 0, 0);
-				salir = new Renderable("salir", 1, 320, 80, 152, 30, 0, 0);
-				renderer.drawBackground("backmenu");
+				jugar = new Renderable(images.jugar, 0, 320, 50, 152, 30, 0, 0);
+				salir = new Renderable(images.salir, 1, 320, 80, 152, 30, 0, 0);
+				renderer.drawBackground(images.backmenu);
 			}
 			break;
 		case 1:
@@ -73,13 +76,11 @@ function Menu() {
 				if(seleccion == 1) { // Si estaba activado "jugar"
 					state++;
 					renderer.renderFrame(); //Restituye los fondos del menu, para evitar parpadeo
-					renderer.setFrontBuffer(0);     // Configuracion de paginas inicial
-					renderer.setBackBuffer(1); // Evita parpadeo por mal sincronismo de paginas
-					jugador1 = new Renderable("nave1", 10, 100, 420, 44, 56, 0, Vnave);
-					jugador2 = new Renderable("nave2", 10, 540, 60, 64, 52, -180, Vnave);
-					laser1 = new Renderable("laser1", 0, 0, 0, 40, 40, 0, Vlaser);
-					laser2 = new Renderable("laser2", 0, 0, 0, 40, 40, 0, Vlaser);
-					renderer.drawBackground("fondo");
+					jugador1 = new Renderable(images.nave1, 10, 100, 420, 44, 56, 0, Vnave);
+					jugador2 = new Renderable(images.nave2, 10, 540, 60, 64, 52, -180, Vnave);
+					laser1 = new Renderable(images.laser1, 0, 0, 0, 40, 40, 0, Vlaser);
+					laser2 = new Renderable(images.laser2, 0, 0, 0, 40, 40, 0, Vlaser);
+					renderer.drawBackground(images.fondo);
 				}
 			}
 			break;
@@ -114,7 +115,7 @@ function Menu() {
 				if(j < 0) {
 					explotando1 = 0;
 					if(vidas1 != 0)
-						jugador1 = new Renderable("nave1", 10, 100, 420, 44, 56, 0, Vnave);
+						jugador1 = new Renderable(images.nave1, 10, 100, 420, 44, 56, 0, Vnave);
 				}
 			}
 			if(!explotando2) {
@@ -147,26 +148,24 @@ function Menu() {
 				if(i < 0) {
 					explotando2 = 0;
 					if(vidas2 != 0)
-						jugador2 = new Renderable("nave2", 10, 540, 60, 64, 52, -180, Vnave);
+						jugador2 = new Renderable(images.nave2, 10, 540, 60, 64, 52, -180, Vnave);
 				}
 			}
 			if(vidas1 == 0 || vidas2 == 0) {
 				renderer.renderFrame(); // Fuerza restitucion de fondos del juego
-				renderer.setFrontBuffer(0);     // Configuracion de pag inicial
-				renderer.setBackBuffer(1); // Evita parpadeo de menu
 				if(vidas1 == 0 && vidas2 == 0) {
 					ganador = EMPATE;
-					renderer.drawBackground("empate");
+					renderer.drawBackground(images.empate);
 				}
 				else {
 					ganador = vidas1 == 0 ? GANADOR2 : GANADOR1;
 					i = 0;
 					frames = 0;
-					renderer.drawBackground("ganador");
+					renderer.drawBackground(images.ganador);
 					if(ganador == GANADOR2)
-						nave1 = new Renderable("nave2big", 0, 320, 300, 64, 64, 0, 0);
+						nave1 = new Renderable(images.nave2big, 0, 320, 300, 64, 64, 0, 0);
 					else
-						nave1 = new Renderable("nave1big", 0, 320, 300, 80, 68, 0, 0);
+						nave1 = new Renderable(images.nave1big, 0, 320, 300, 80, 68, 0, 0);
 				}
 				state += 1;
 			}
@@ -183,22 +182,22 @@ function Menu() {
 				if(jugador1.isCollisioning(jugador2) && !explotando1 && !explotando2) {
 					vidas1--;
 					vidas2--;
-					jugador1 = new Renderable("explo", 17, jugador1.x, jugador1.y, 64, 64, 0, 0);
-					jugador2 = new Renderable("explo", 17, jugador2.x, jugador2.y, 64, 64, 0, 0);
+					jugador1 = new Renderable(images.explo, 17, jugador1.x, jugador1.y, 64, 64, 0, 0);
+					jugador2 = new Renderable(images.explo, 17, jugador2.x, jugador2.y, 64, 64, 0, 0);
 					j = i = 16;
 					explotando1 = 1;
 					explotando2 = 1;
 				}
 				if(jugador1.isCollisioning(laser2) && !explotando1 && disparar2 == 1) {
 					vidas1--;
-					jugador1 = new Renderable("explo", 17, jugador1.x, jugador1.y, 64, 64, 0, 0);
+					jugador1 = new Renderable(images.explo, 17, jugador1.x, jugador1.y, 64, 64, 0, 0);
 					j = 16;
 					explotando1 = 1;
 					disparar2 = 0;
 				}
 				if(laser1.isCollisioning(jugador2) && !explotando2 && disparar1 == 1) {
 					vidas2--;
-					jugador2 = new Renderable("explo", 17, jugador2.x, jugador2.y, 64, 64, 0, 0);
+					jugador2 = new Renderable(images.explo, 17, jugador2.x, jugador2.y, 64, 64, 0, 0);
 					i = 16;
 					explotando2 = 1;
 					disparar1 = 0;
@@ -225,11 +224,9 @@ function Menu() {
 			if(Keyboard.read(KEY_ENTER)) {
 				Keyboard.flush();
 				renderer.renderFrame(); // Fuerza restitucion de fondos del juego
-				renderer.setFrontBuffer(0);     // Configuracion de pag inicial
-				renderer.setBackBuffer(1); // Evita parpadeo de menu
-				jugar = new Renderable("jugar", 0, 320, 50, 152, 30, 0, 0);
-				salir = new Renderable("salir", 1, 320, 80, 152, 30, 0, 0);
-				renderer.drawBackground("backmenu");
+				jugar = new Renderable(images.jugar, 0, 320, 50, 152, 30, 0, 0);
+				salir = new Renderable(images.salir, 1, 320, 80, 152, 30, 0, 0);
+				renderer.drawBackground(images.backmenu);
 				disparar1 = disparar2 = explotando1 = explotando2 = i = j = 0;
 				vidas1 = vidas2 = VIDAS;
 				state = 1;

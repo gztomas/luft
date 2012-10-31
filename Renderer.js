@@ -1,10 +1,27 @@
 var Renderer = function () {
-	var pantalla_visible = 0;
-	var pantalla_activa = 0;
 	var buf0, buf1;
 	var _this = this;
 	var canvas;
 	var context;
+	var backBuffer;
+	var frontBuffer;
+	var fps;
+	var frameTime = [];
+
+	var writeFps = function() {
+		frameTime.push(new Date());
+		if(!fps) {
+			fps = document.createElement("div");
+			fps.style.position = "absolute";
+			fps.style.color = "green";
+			fps.style.top = 0;
+			fps.style.left = 0;
+			document.body.appendChild(fps);
+		}
+		fps.innerHTML = (1000 * frameTime.length/ (frameTime[frameTime.length - 1] - frameTime[0])).toFixed(2) + "FPS";
+		if(frameTime.length >= 50)
+			frameTime.shift();
+	};
 
 	var indice = [0, 0];
 	var borradorpag = [
@@ -33,60 +50,44 @@ var Renderer = function () {
 		context = canvas.getContext("2d");
 		buf0 = context.createImageData(640, 480);
 		buf1 = context.createImageData(640, 480);
-		_this.setFrontBuffer(0);
-		_this.setBackBuffer(1);
 	};
 
 	this.setPixel = function (x, y, r, g, b, a) {
-		(pantalla_activa ? buf1.data : buf0.data)[x * 4 + y * 4 * 640 + 0] = r;
-		(pantalla_activa ? buf1.data : buf0.data)[x * 4 + y * 4 * 640 + 1] = g;
-		(pantalla_activa ? buf1.data : buf0.data)[x * 4 + y * 4 * 640 + 2] = b;
-		(pantalla_activa ? buf1.data : buf0.data)[x * 4 + y * 4 * 640 + 3] = a;
+		backBuffer.data[x * 4 + y * 4 * 640 + 0] = r;
+		backBuffer.data[x * 4 + y * 4 * 640 + 1] = g;
+		backBuffer.data[x * 4 + y * 4 * 640 + 2] = b;
+		backBuffer.data[x * 4 + y * 4 * 640 + 3] = a;
 	};
 
 	this.getPixel = function (x, y) {
 		return {
-			r:(pantalla_activa ? buf1.data : buf0.data)[x * 4 + y * 640 * 4 + 0],
-			g:(pantalla_activa ? buf1.data : buf0.data)[x * 4 + y * 640 * 4 + 1],
-			b:(pantalla_activa ? buf1.data : buf0.data)[x * 4 + y * 640 * 4 + 2],
-			a:(pantalla_activa ? buf1.data : buf0.data)[x * 4 + y * 640 * 4 + 3]
+			r:backBuffer.data[x * 4 + y * 640 * 4 + 0],
+			g:backBuffer.data[x * 4 + y * 640 * 4 + 1],
+			b:backBuffer.data[x * 4 + y * 640 * 4 + 2],
+			a:backBuffer.data[x * 4 + y * 640 * 4 + 3]
 		}
 	};
 
-	this.setFrontBuffer = function (pantalla) {
-		if (pantalla)
-			context.putImageData(buf1, 0, 0);
-		else
-			context.putImageData(buf0, 0, 0);
-		pantalla_visible = pantalla;
+	this.setFrontBuffer = function (newVal) {
+		frontBuffer = newVal ? buf1 : buf0;
+		context.putImageData(frontBuffer, 0, 0);
 	};
 
-	this.setBackBuffer = function (p) {
-		pantalla_activa = (p == 1 || p == 0) ? p : -1;
+	this.setBackBuffer = function (newVal) {
+		backBuffer = newVal ? buf1 : buf0;
 	};
 
 	this.renderFrame = function () {
-		//var contador=1;
-		//var retardo=0;
-		//var tactual=0;
-		//var tanterior=0;
-		//contador++;
-		//if(!(contador%10))
-		//{
-		//	tanterior=tactual;
-		//	tactual=GetTickCount();
-		//}
-		//if((tactual-tanterior)<50 && contador>10) retardo++;
-		//Sleep(retardo);
-		_this.setFrontBuffer(1 - pantalla_visible);    // Estas dos lineas cambian la pantalla
-		_this.setBackBuffer(1 - pantalla_activa); // visible y la activa. Animacion
+		writeFps();
+		_this.swapBuffers();
 		_this.clear(); // Borra los objetos y restaura los fondos pisados
 	};
 
 	this.clear = function () {
+		var bufferIndex = backBuffer == buf0 ? 0 : 1;
 		var i, x, y;
-		for (i = (indice[pantalla_activa] - 1); i >= 0; i--) {
-			var borrador = borradorpag[pantalla_activa][i];
+		for (i = (indice[bufferIndex] - 1); i >= 0; i--) {
+			var borrador = borradorpag[bufferIndex][i];
 			for (y = 0; y < borrador.alto; y++)
 				for (x = 0; x < borrador.ancho; x++) {
 					var offset = x * 4 + y * 4 * borrador.ancho;
@@ -98,50 +99,54 @@ var Renderer = function () {
 					);
 				}
 		}
-		indice[pantalla_activa] = 0;
+		indice[bufferIndex] = 0;
 	};
 
 	this.backup = function(ancho, alto, X, Y) {
 		var x, y, i;
-
-		i = indice[pantalla_activa];
-		if(!borradorpag[pantalla_activa][i])
-			borradorpag[pantalla_activa][i] = new BUFFER();
-		borradorpag[pantalla_activa][i].direccion = new Uint8Array(ancho * alto * 4);
-		borradorpag[pantalla_activa][i].x = X;
-		borradorpag[pantalla_activa][i].y = Y;
-		borradorpag[pantalla_activa][i].ancho = ancho;
-		borradorpag[pantalla_activa][i].alto = alto;
+		var bufferIndex = backBuffer == buf0 ? 0 : 1;
+		i = indice[bufferIndex];
+		if(!borradorpag[bufferIndex][i])
+			borradorpag[bufferIndex][i] = new BUFFER();
+		borradorpag[bufferIndex][i].direccion = new Uint8Array(ancho * alto * 4);
+		borradorpag[bufferIndex][i].x = X;
+		borradorpag[bufferIndex][i].y = Y;
+		borradorpag[bufferIndex][i].ancho = ancho;
+		borradorpag[bufferIndex][i].alto = alto;
 		for(y = 0; y < alto; y++) {
 			for(x = 0; x < ancho; x++) {
-				borradorpag[pantalla_activa][i].direccion[x * 4 + y * 4 * ancho + 0] = _this.getPixel(x + X, y + Y).r;
-				borradorpag[pantalla_activa][i].direccion[x * 4 + y * 4 * ancho + 1] = _this.getPixel(x + X, y + Y).g;
-				borradorpag[pantalla_activa][i].direccion[x * 4 + y * 4 * ancho + 2] = _this.getPixel(x + X, y + Y).b;
-				borradorpag[pantalla_activa][i].direccion[x * 4 + y * 4 * ancho + 3] = _this.getPixel(x + X, y + Y).a;
+				borradorpag[bufferIndex][i].direccion[x * 4 + y * 4 * ancho + 0] = _this.getPixel(x + X, y + Y).r;
+				borradorpag[bufferIndex][i].direccion[x * 4 + y * 4 * ancho + 1] = _this.getPixel(x + X, y + Y).g;
+				borradorpag[bufferIndex][i].direccion[x * 4 + y * 4 * ancho + 2] = _this.getPixel(x + X, y + Y).b;
+				borradorpag[bufferIndex][i].direccion[x * 4 + y * 4 * ancho + 3] = _this.getPixel(x + X, y + Y).a;
 			}
 		}
-		indice[pantalla_activa]++;
+		indice[bufferIndex]++;
 	};
 
-	this.draw = function(nombre, ancho, alto) {
-		context.drawImage(document.getElementById(nombre), 0, 0);
-		var fp = context.getImageData(0, 0, ancho, alto);
+	this.draw = function(image, ancho, alto) {
 		for(var i = alto - 1; i >= 0; i--) {
 			for(var j = 0; j < ancho; j++) {
 				_this.setPixel(j, i,
-					fp.data[j * 4 + i * 4 * ancho + 0],
-					fp.data[j * 4 + i * 4 * ancho + 1],
-					fp.data[j * 4 + i * 4 * ancho + 2],
-					fp.data[j * 4 + i * 4 * ancho + 3]
+					image.data[j * 4 + i * 4 * ancho + 0],
+					image.data[j * 4 + i * 4 * ancho + 1],
+					image.data[j * 4 + i * 4 * ancho + 2],
+					image.data[j * 4 + i * 4 * ancho + 3]
 				);
 			}
 		}
 	};
 
 	this.drawBackground = function(archivo) {
+		_this.setFrontBuffer(0);
 		_this.setBackBuffer(0);
 		_this.draw(archivo, 640, 480);
 		_this.setBackBuffer(1);
 		_this.draw(archivo, 640, 480);
+	};
+
+	this.swapBuffers = function() {
+		_this.setFrontBuffer(frontBuffer == buf0);
+		_this.setBackBuffer(backBuffer == buf0);
 	};
 };
