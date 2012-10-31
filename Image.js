@@ -32,6 +32,14 @@ var Image = function() {
 		request.open("GET", uri, true);
 		request.overrideMimeType('text/plain; charset=x-user-defined');
 		request.send(null);
+		request.onreadystatechange = function() {
+			if(request.readyState == request.HEADERS_RECEIVED) {
+				_this.progress = {
+					loaded: 0,
+					total: request.getResponseHeader("Content-Length")
+				};
+			}
+		}
     };
     
     this.create = function(width, height) {
