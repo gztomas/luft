@@ -222,6 +222,7 @@ BT.Game = function(images) {
     var init = function() {
 		renderer.init();
 		renderer.drawBackground(images.intro);
+		renderer.renderFrame();
 		versus = new BT.Renderable(images.versus, 27, 320, 280, 64, 84, 0, 0);
 		nave1 = new BT.Renderable(images.nave2big, 0, 180, 280, 64, 64, 0, 0);
 		nave2 = new BT.Renderable(images.nave1big, 0, 460, 280, 80, 68, 0, 0);
