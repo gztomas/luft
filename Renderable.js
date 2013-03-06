@@ -1,4 +1,6 @@
-var Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
+var BT = window.BT || {};
+
+BT.Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
 	
     var _this = this;
 	this.x = x;
@@ -7,7 +9,7 @@ var Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
     
 	var cuadros = image.height / alto;
 	var archivo = image.data;
-    var frameImage = new Image();
+    var frameImage = new BT.Image();
     frameImage.create(ancho, alto);
 	var imagen = frameImage.data;
 

@@ -1,18 +1,20 @@
-var Image = function() {
-    var _this = this;
+var BT = window.BT || {};
 
-    var getAuxContext = function() {
-        if(!Image.auxCanvas) {
-    		Image.auxCanvas = document.createElement("canvas");
-    	}
-		if(Image.auxCanvas.width != _this.width || Image.auxCanvas.height != _this.height) {
-    		Image.auxCanvas.style.width = Image.auxCanvas.width = _this.width;
-    		Image.auxCanvas.style.height = Image.auxCanvas.height = _this.height;
+BT.Image = function() {
+	var _this = this;
+
+	var getAuxContext = function() {
+		if(!BT.Image.auxCanvas) {
+			BT.Image.auxCanvas = document.createElement("canvas");
 		}
-    	return Image.auxCanvas.getContext("2d");
-    };
-    
-    this.load = function(uri, progressCallback) {
+		if(BT.Image.auxCanvas.width != _this.width || BT.Image.auxCanvas.height != _this.height) {
+			BT.Image.auxCanvas.style.width = BT.Image.auxCanvas.width = _this.width;
+			BT.Image.auxCanvas.style.height = BT.Image.auxCanvas.height = _this.height;
+		}
+		return BT.Image.auxCanvas.getContext("2d");
+	};
+
+	this.load = function(uri, progressCallback) {
 		_this.uri = uri;
 		var request = new XMLHttpRequest();
 		request.onloadstart = request.onprogress = function(e) {
@@ -41,18 +43,17 @@ var Image = function() {
 					total: request.getResponseHeader("Content-Length")
 				};
 			}
-		}
-    };
-    
-    this.create = function(width, height) {
-        _this.height = height;
-        _this.width = width;
-        _this.data = getAuxContext().createImageData(width, height).data;
-    };
+		};
+	};
+
+	this.create = function(width, height) {
+		_this.height = height;
+		_this.width = width;
+		_this.data = getAuxContext().createImageData(width, height).data;
+	};
 };
 
-var ImageLoader = function(imageNames, callback) {
-	var _this = this;
+BT.ImageLoader = function(imageNames, callback) {
 	var images = {};
 	var progressBar;
 
@@ -86,7 +87,7 @@ var ImageLoader = function(imageNames, callback) {
 	var init = function() {
 		showProgressBar();
 		for(var i = 0; i < imageNames.length; i++) {
-			var image = images[imageNames[i]] = new Image();
+			var image = images[imageNames[i]] = new BT.Image();
 			image.load(name2uri(imageNames[i]), progressCallback);
 		}
 	};

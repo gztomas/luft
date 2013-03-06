@@ -1,16 +1,6 @@
-//Definiciones de codigos de teclado
-var KEY_UP = 38;
-var KEY_DOWN = 40;
-var KEY_LEFT = 37;
-var KEY_RIGHT = 39;
-var KEY_ENTER = 13;
-var KEY_RSHIFT = 16;
-var KEY_Q = 81;
-var KEY_W = 87;
-var KEY_A = 65;
-var KEY_D = 68;
+var BT = window.BT || {};
 
-window.Keyboard = new function() {
+BT.Keyboard = function() {
 	var keys = {};
 
 	window.onkeydown = function(e) {
@@ -28,4 +18,18 @@ window.Keyboard = new function() {
 	this.flush = function() {
 		keys = {};
 	};
+};
+BT.Keyboard = new BT.Keyboard();
+
+BT.Keys = {
+	UP : 38,
+	DOWN: 40,
+	LEFT: 37,
+	RIGHT: 39,
+	ENTER: 13,
+	RSHIFT: 16,
+	Q: 81,
+	W: 87,
+	A: 65,
+	D: 68	
 };

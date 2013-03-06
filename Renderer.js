@@ -1,4 +1,6 @@
-var Renderer = function () {
+var BT = window.BT || {};
+
+BT.Renderer = function () {
 	var buf0, buf1;
 	var _this = this;
 	var canvas;
@@ -18,7 +20,7 @@ var Renderer = function () {
 			fps.style.left = 0;
 			document.body.appendChild(fps);
 		}
-		fps.innerHTML = (1000 * frameTime.length/ (frameTime[frameTime.length - 1] - frameTime[0])).toFixed(2) + "FPS";
+		fps.innerHTML = (1000 * frameTime.length / (frameTime[frameTime.length - 1] - frameTime[0])).toFixed(2) + "FPS";
 		if(frameTime.length >= 50)
 			frameTime.shift();
 	};
@@ -65,7 +67,7 @@ var Renderer = function () {
 			g:backBuffer.data[x * 4 + y * 640 * 4 + 1],
 			b:backBuffer.data[x * 4 + y * 640 * 4 + 2],
 			a:backBuffer.data[x * 4 + y * 640 * 4 + 3]
-		}
+		};
 	};
 
 	this.setFrontBuffer = function (newVal) {
