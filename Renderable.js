@@ -28,7 +28,11 @@ BT.Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
 		var centroy = alto / 2;
 		var coordx = Math.floor(_this.x - centrox);
 		var coordy = Math.floor(_this.y - centroy);
+<<<<<<< HEAD
 		var data = imagen;
+=======
+		renderer.backup(ancho, alto, coordx, coordy);
+>>>>>>> 14094fda3e780e9a9b7b17fdcbb25cdcb994af3a
 		for(var v = 0; v < alto; v++) {
 			for(var h = 0; h < ancho; h++) {
 				var x1 = Math.floor((h - centrox) * cosT + (v - centroy) * sinT);
@@ -36,12 +40,12 @@ BT.Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
 				x1 = Math.floor(x1 + ancho * 0.5);
 				y1 = Math.floor(y1 + alto * 0.5);
 				var offset = x1 * 4 + y1 * 4 * ancho;
-				if(x1 > 0 && y1 > 0 && x1 < ancho && y1 < alto && (data[offset + 0] || data[offset + 1] || data[offset + 2]))
+				if(x1 > 0 && y1 > 0 && x1 < ancho && y1 < alto && (imagen[offset + 0] || imagen[offset + 1] || imagen[offset + 2]))
 					renderer.setPixel(h + coordx, v + coordy,
-						data[offset + 0],
-						data[offset + 1],
-						data[offset + 2],
-						data[offset + 3]
+						imagen[offset + 0],
+						imagen[offset + 1],
+						imagen[offset + 2],
+						imagen[offset + 3]
 					);
 			}
 		}
