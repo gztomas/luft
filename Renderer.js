@@ -7,6 +7,8 @@ BT.Renderer = function () {
 	var fps;
 	var frameTime = [];
 	var video;
+	var background;
+	var scene = {};
 
 	var writeFps = function() {
 		frameTime.push(new Date());
@@ -24,7 +26,6 @@ BT.Renderer = function () {
 	};
 
 	var indice;
-	var borradorpag = [];
 	var BUFFER = function () {
 		this.x = 0;
 		this.y = 0;
@@ -46,6 +47,7 @@ BT.Renderer = function () {
 		canvas.height = 480;
 		context = canvas.getContext("2d");
 		video = context.createImageData(640, 480);
+		setInterval(renderFrame, 20);
 	};
 
 	this.setPixel = function (x, y, r, g, b, a) {
@@ -64,69 +66,17 @@ BT.Renderer = function () {
 		};
 	};
 
-	this.renderFrame = function () {
+	var renderFrame = function () {
 		writeFps();
-		context.putImageData(video, 0, 0);
-		_this.clear(); // Borra los objetos y restaura los fondos pisados
-	};
-
-	this.clear = function () {
-		var i, x, y;
-		for (i = (indice - 1); i >= 0; i--) {
-			var borrador = borradorpag[i];
-			for (y = 0; y < borrador.alto; y++)
-				for (x = 0; x < borrador.ancho; x++) {
-					var offset = x * 4 + y * 4 * borrador.ancho;
-					_this.setPixel(x + borrador.x, y + borrador.y,
-						borrador.direccion[offset + 0],
-						borrador.direccion[offset + 1],
-						borrador.direccion[offset + 2],
-						borrador.direccion[offset + 3]
-					);
-				}
-		}
-		indice = 0;
-	};
-
-	this.backup = function(ancho, alto, X, Y) {
-		var x, y, i;
-		i = indice;
-		if(!borradorpag[i])
-			borradorpag[i] = new BUFFER();
-		borradorpag[i].direccion = new Uint8Array(ancho * alto * 4);
-		borradorpag[i].x = X;
-		borradorpag[i].y = Y;
-		borradorpag[i].ancho = ancho;
-		borradorpag[i].alto = alto;
-		for(y = 0; y < alto; y++) {
-			var lineOffset = y * 4 * ancho;
-			for(x = 0; x < ancho; x++) {
-				var pixelOffset = x * 4 + lineOffset;
-				var sourceX = x + X;
-				var sourceY = y + Y;
-				borradorpag[i].direccion[pixelOffset + 0] = _this.getPixel(sourceX, sourceY).r;
-				borradorpag[i].direccion[pixelOffset + 1] = _this.getPixel(sourceX, sourceY).g;
-				borradorpag[i].direccion[pixelOffset + 2] = _this.getPixel(sourceX, sourceY).b;
-				borradorpag[i].direccion[pixelOffset + 3] = _this.getPixel(sourceX, sourceY).a;
-			}
-		}
-		indice++;
-	};
-
-	this.draw = function(image, ancho, alto) {
-		for(var i = alto - 1; i >= 0; i--) {
-			for(var j = 0; j < ancho; j++) {
-				_this.setPixel(j, i,
-					image.data[j * 4 + i * 4 * ancho + 0],
-					image.data[j * 4 + i * 4 * ancho + 1],
-					image.data[j * 4 + i * 4 * ancho + 2],
-					image.data[j * 4 + i * 4 * ancho + 3]
-				);
-			}
+		context.drawImage(background, 0, 0);
+		//context.putImageData(video, 0, 0);
+		for(var renderable in scene) {
+			if(scene.hasOwnProperty(renderable))
+				scene[renderable].draw(_this);
 		}
 	};
 
-	this.drawBackground = function(archivo) {
-		_this.draw(archivo, 640, 480);
+	this.setBackground = function(archivo) {
+		background = archivo.node;
 	};
 };

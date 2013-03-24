@@ -16,7 +16,7 @@ BT.Game = function(images) {
 	var stage;
 
 	var intro = function() {
-		versus.draw(renderer);
+		versus.draw(renderer); // cambiar por "add"
 		nave1.draw(renderer);
 		nave2.draw(renderer);
 		versus.setFrame(i);
@@ -30,13 +30,11 @@ BT.Game = function(images) {
 			if(j > 30)
 				j = 1;
 		}
-		renderer.renderFrame();
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
 			BT.Keyboard.flush();
-			renderer.renderFrame(); //Restituye los fondos del menu, para evitar parpadeo
 			jugar = new BT.Renderable(images.jugar, 0, 320, 50, 152, 30, 0, 0);
 			salir = new BT.Renderable(images.salir, 1, 320, 80, 152, 30, 0, 0);
-			renderer.drawBackground(images.backmenu);
+			renderer.setBackground(images.backmenu);
             stage = menu;
 		}
     };
@@ -44,7 +42,6 @@ BT.Game = function(images) {
     var menu = function() {
 		jugar.draw(renderer);
 		salir.draw(renderer);
-		renderer.renderFrame();
 		if(BT.Keyboard.read(BT.Keys.UP)) {
 			jugar.setFrame(0); // Activa la palabra "jugar"
 			salir.setFrame(1); // Desactiva "salir"
@@ -59,12 +56,11 @@ BT.Game = function(images) {
 			BT.Keyboard.flush();
 			if(seleccion == 1) { // Si estaba activado "jugar"
 				stage = match;
-				renderer.renderFrame(); //Restituye los fondos del menu, para evitar parpadeo
 				jugador1 = new BT.Renderable(images.nave1, 10, 100, 420, 44, 56, 0, Vnave);
 				jugador2 = new BT.Renderable(images.nave2, 10, 540, 60, 64, 52, -180, Vnave);
 				laser1 = new BT.Renderable(images.laser1, 0, 0, 0, 40, 40, 0, Vlaser);
 				laser2 = new BT.Renderable(images.laser2, 0, 0, 0, 40, 40, 0, Vlaser);
-				renderer.drawBackground(images.fondo);
+				renderer.setBackground(images.fondo);
 			}
 		}
     };
@@ -137,16 +133,15 @@ BT.Game = function(images) {
 			}
 		}
 		if(vidas1 === 0 || vidas2 === 0) {
-			renderer.renderFrame(); // Fuerza restitucion de fondos del juego
 			if(vidas1 === 0 && vidas2 === 0) {
 				ganador = EMPATE;
-				renderer.drawBackground(images.empate);
+				renderer.setBackground(images.empate);
 			}
 			else {
 				ganador = vidas1 === 0 ? GANADOR2 : GANADOR1;
 				i = 0;
 				frames = 0;
-				renderer.drawBackground(images.ganador);
+				renderer.setBackground(images.ganador);
 				if(ganador == GANADOR2)
 					nave1 = new BT.Renderable(images.nave2big, 0, 320, 300, 64, 64, 0, 0);
 				else
@@ -192,7 +187,6 @@ BT.Game = function(images) {
 			jugador2.draw(renderer);
 			if(laser1.y < 40 || laser1.y > 440 || laser1.x < 40 || laser1.x > 600) disparar1 = 0;
 			if(laser2.y < 40 || laser2.y > 440 || laser2.x < 40 || laser2.x > 600) disparar2 = 0;
-			renderer.renderFrame();
 		}
     };
     
@@ -206,13 +200,11 @@ BT.Game = function(images) {
 					i = 1;
 			}
 		}
-		renderer.renderFrame();
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
 			BT.Keyboard.flush();
-			renderer.renderFrame(); // Fuerza restitucion de fondos del juego
 			jugar = new BT.Renderable(images.jugar, 0, 320, 50, 152, 30, 0, 0);
 			salir = new BT.Renderable(images.salir, 1, 320, 80, 152, 30, 0, 0);
-			renderer.drawBackground(images.backmenu);
+			renderer.setBackground(images.backmenu);
 			disparar1 = disparar2 = explotando1 = explotando2 = i = j = 0;
 			vidas1 = vidas2 = VIDAS;
 			stage = menu;
@@ -221,8 +213,7 @@ BT.Game = function(images) {
     
     var init = function() {
 		renderer.init();
-		renderer.drawBackground(images.intro);
-		renderer.renderFrame();
+		renderer.setBackground(images.intro);
 		versus = new BT.Renderable(images.versus, 27, 320, 280, 64, 84, 0, 0);
 		nave1 = new BT.Renderable(images.nave2big, 0, 180, 280, 64, 64, 0, 0);
 		nave2 = new BT.Renderable(images.nave1big, 0, 460, 280, 80, 68, 0, 0);

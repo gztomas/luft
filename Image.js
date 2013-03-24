@@ -29,6 +29,7 @@ BT.Image = function() {
 				_this.width = node.width;
 				getAuxContext().drawImage(node, 0, 0, _this.width, _this.height);
 				_this.data = getAuxContext().getImageData(0, 0, _this.width, _this.height).data;
+				_this.node = node;
 				_this.loaded = true;
 				progressCallback(_this);
 			};

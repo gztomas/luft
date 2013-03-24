@@ -28,7 +28,6 @@ BT.Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
 		var centroy = alto / 2;
 		var coordx = Math.floor(_this.x - centrox);
 		var coordy = Math.floor(_this.y - centroy);
-		renderer.backup(ancho, alto, coordx, coordy);
 		var data = imagen;
 		for(var v = 0; v < alto; v++) {
 			for(var h = 0; h < ancho; h++) {
