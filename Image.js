@@ -21,7 +21,7 @@ BT.Image = function() {
 			_this.progress = e;
 			progressCallback(_this);
 		};
-		request.onload =  function(e) {
+		request.onload =  function() {
 			var node = document.createElement("img");
 			node.src = uri;
 			node.onload = function() {
@@ -70,10 +70,12 @@ BT.ImageLoader = function(imageNames, callback) {
 		var loaded = 0;
 		var total = 0;
 		for(var i in images) {
-			end = end && images[i].loaded;
-			if(images[i].progress) {
-				loaded += images[i].progress.loaded;
-				total += images[i].progress.total;
+			if(images.hasOwnProperty(i)) {
+				end = end && images[i].loaded;
+				if(images[i].progress) {
+					loaded += images[i].progress.loaded;
+					total += images[i].progress.total;
+				}
 			}
 		}
 		if(total)
