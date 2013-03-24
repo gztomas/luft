@@ -32,16 +32,9 @@ BT.Game = function(images) {
 		}
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
 			BT.Keyboard.flush();
-<<<<<<< HEAD
-			jugar = new BT.Renderable(images.jugar, 0, 320, 50, 152, 30, 0, 0);
-			salir = new BT.Renderable(images.salir, 1, 320, 80, 152, 30, 0, 0);
-			renderer.setBackground(images.backmenu);
-=======
-			renderer.renderFrame(); //Restituye los fondos del menu, para evitar parpadeo
 			jugar = new BT.Renderable(images["jugar"], 0, 320, 50, 152, 30, 0, 0);
 			salir = new BT.Renderable(images["salir"], 1, 320, 80, 152, 30, 0, 0);
-			renderer.drawBackground(images["backmenu"]);
->>>>>>> 14094fda3e780e9a9b7b17fdcbb25cdcb994af3a
+			renderer.setBackground(images["backmenu"]);
             stage = menu;
 		}
     };
@@ -63,20 +56,11 @@ BT.Game = function(images) {
 			BT.Keyboard.flush();
 			if(seleccion == 1) { // Si estaba activado "jugar"
 				stage = match;
-<<<<<<< HEAD
-				jugador1 = new BT.Renderable(images.nave1, 10, 100, 420, 44, 56, 0, Vnave);
-				jugador2 = new BT.Renderable(images.nave2, 10, 540, 60, 64, 52, -180, Vnave);
-				laser1 = new BT.Renderable(images.laser1, 0, 0, 0, 40, 40, 0, Vlaser);
-				laser2 = new BT.Renderable(images.laser2, 0, 0, 0, 40, 40, 0, Vlaser);
-				renderer.setBackground(images.fondo);
-=======
-				renderer.renderFrame(); //Restituye los fondos del menu, para evitar parpadeo
 				jugador1 = new BT.Renderable(images["nave1"], 10, 100, 420, 44, 56, 0, Vnave);
 				jugador2 = new BT.Renderable(images["nave2"], 10, 540, 60, 64, 52, -180, Vnave);
 				laser1 = new BT.Renderable(images["laser1"], 0, 0, 0, 40, 40, 0, Vlaser);
 				laser2 = new BT.Renderable(images["laser2"], 0, 0, 0, 40, 40, 0, Vlaser);
-				renderer.drawBackground(images["fondo"]);
->>>>>>> 14094fda3e780e9a9b7b17fdcbb25cdcb994af3a
+				renderer.setBackground(images["fondo"]);
 			}
 		}
     };
@@ -151,21 +135,13 @@ BT.Game = function(images) {
 		if(vidas1 === 0 || vidas2 === 0) {
 			if(vidas1 === 0 && vidas2 === 0) {
 				ganador = EMPATE;
-<<<<<<< HEAD
-				renderer.setBackground(images.empate);
-=======
-				renderer.drawBackground(images["empate"]);
->>>>>>> 14094fda3e780e9a9b7b17fdcbb25cdcb994af3a
+				renderer.setBackground(images["empate"]);
 			}
 			else {
 				ganador = vidas1 === 0 ? GANADOR2 : GANADOR1;
 				i = 0;
 				frames = 0;
-<<<<<<< HEAD
-				renderer.setBackground(images.ganador);
-=======
-				renderer.drawBackground(images["ganador"]);
->>>>>>> 14094fda3e780e9a9b7b17fdcbb25cdcb994af3a
+				renderer.setBackground(images["ganador"]);
 				if(ganador == GANADOR2)
 					nave1 = new BT.Renderable(images["nave2big"], 0, 320, 300, 64, 64, 0, 0);
 				else
@@ -226,16 +202,9 @@ BT.Game = function(images) {
 		}
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
 			BT.Keyboard.flush();
-<<<<<<< HEAD
-			jugar = new BT.Renderable(images.jugar, 0, 320, 50, 152, 30, 0, 0);
-			salir = new BT.Renderable(images.salir, 1, 320, 80, 152, 30, 0, 0);
-			renderer.setBackground(images.backmenu);
-=======
-			renderer.renderFrame(); // Fuerza restitucion de fondos del juego
 			jugar = new BT.Renderable(images["jugar"], 0, 320, 50, 152, 30, 0, 0);
 			salir = new BT.Renderable(images["salir"], 1, 320, 80, 152, 30, 0, 0);
-			renderer.drawBackground(images["backmenu"]);
->>>>>>> 14094fda3e780e9a9b7b17fdcbb25cdcb994af3a
+			renderer.setBackground(images["backmenu"]);
 			disparar1 = disparar2 = explotando1 = explotando2 = i = j = 0;
 			vidas1 = vidas2 = VIDAS;
 			stage = menu;
@@ -244,17 +213,10 @@ BT.Game = function(images) {
     
     var init = function() {
 		renderer.init();
-<<<<<<< HEAD
-		renderer.setBackground(images.intro);
-		versus = new BT.Renderable(images.versus, 27, 320, 280, 64, 84, 0, 0);
-		nave1 = new BT.Renderable(images.nave2big, 0, 180, 280, 64, 64, 0, 0);
-		nave2 = new BT.Renderable(images.nave1big, 0, 460, 280, 80, 68, 0, 0);
-=======
-		renderer.drawBackground(images["intro"]);
+		renderer.setBackground(images["intro"]);
 		versus = new BT.Renderable(images["versus"], 27, 320, 280, 64, 84, 0, 0);
 		nave1 = new BT.Renderable(images["nave2big"], 0, 180, 280, 64, 64, 0, 0);
 		nave2 = new BT.Renderable(images["nave1big"], 0, 460, 280, 80, 68, 0, 0);
->>>>>>> 14094fda3e780e9a9b7b17fdcbb25cdcb994af3a
 		stage = intro;
 		setInterval(function() {
 			stage();
