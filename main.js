@@ -2,7 +2,7 @@ var BT = window.BT || {};
 
 BT.Game = function(images) {
 	BT.IMAGES = images;
-	var jugador1, jugador2, salir, jugar;
+	var silverShip, blackShip, salir, jugar;
 	var renderer = new BT.Renderer();
 	var stage;
 
@@ -28,26 +28,26 @@ BT.Game = function(images) {
 		renderer.add(salir);
 	};
 	var setUpMatchScene = function() {
-		jugador1 = new BT.Ship(renderer, 1);
-		jugador2 = new BT.Ship(renderer, 2);
-		jugador1.deploy(100, 420, 0);
-		jugador2.deploy(540, 60, -180);
+		silverShip = new BT.Ship(renderer, 1);
+		blackShip = new BT.Ship(renderer, 2);
+		silverShip.deploy(100, 420, 0);
+		blackShip.deploy(540, 60, -180);
 		renderer.clearScene();
 		renderer.setBackground(images["fondo"]);
-		renderer.add(jugador1);
-		renderer.add(jugador2);
-		BT.MainKeyboardShipController.assign(jugador1);
-		BT.SecondaryKeyboardShipController.assign(jugador2);
+		renderer.add(silverShip);
+		renderer.add(blackShip);
+		BT.MainKeyboardShipController.assign(silverShip);
+		BT.SecondaryKeyboardShipController.assign(blackShip);
 	};
 	var setUpGameOverScene = function() {
 		renderer.clearScene();
-		if(jugador1.lives === 0 && jugador2.lives === 0) {
+		if(silverShip.lives === 0 && blackShip.lives === 0) {
 			renderer.setBackground(images["empate"]);
 		}
 		else {
 			renderer.setBackground(images["ganador"]);
 			var ship;
-			if(jugador1.lives === 0)
+			if(silverShip.lives === 0)
 				ship = new BT.Renderable(images["nave2big"], 0, {x: 320, y: 300, width: 64, height: 64});
 			else
 				ship = new BT.Renderable(images["nave1big"], 0, {x: 320, y: 300, width: 80, height: 68});
@@ -84,7 +84,7 @@ BT.Game = function(images) {
 		}
     };
     var match = function() {
-		if(jugador1.lives === 0 || jugador2.lives === 0) {
+		if(silverShip.lives === 0 || blackShip.lives === 0) {
 			setUpGameOverScene();
 			stage = gameOver;
 		}
