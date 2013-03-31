@@ -9,6 +9,10 @@ BT.Renderer = function () {
 	var video;
 	var background;
 	var scene = {};
+	var _elementID = 0;
+
+	this.width = 640;
+	this.height = 480;
 
 	var writeFps = function() {
 		frameTime.push(new Date());
@@ -25,58 +29,74 @@ BT.Renderer = function () {
 			frameTime.shift();
 	};
 
-	var indice;
-	var BUFFER = function () {
-		this.x = 0;
-		this.y = 0;
-		this.ancho = 0;
-		this.alto = 0;
-		this.direccion = 0;
-	};
-
 	this.init = function() {
 		canvas = window.document.createElement("canvas");
-		canvas.style.width = "640px";
-		canvas.style.height = "480px";
+		canvas.style.width = _this.width + "px";
+		canvas.style.height = _this.height + "px";
 		canvas.style.marginLeft = 'auto';
 		canvas.style.marginRight = 'auto';
 		canvas.style.marginTop = 'auto';
 		canvas.style.marginBottom = 'auto';
 		window.document.body.insertBefore(canvas, window.document.body.firstChild);
-		canvas.width = 640;
-		canvas.height = 480;
+		canvas.width = _this.width;
+		canvas.height = _this.height;
 		context = canvas.getContext("2d");
-		video = context.createImageData(640, 480);
+		video = context.createImageData(_this.width, _this.height);
 		setInterval(renderFrame, 20);
 	};
 
-	this.setPixel = function (x, y, r, g, b, a) {
-		video.data[x * 4 + y * 4 * 640 + 0] = r;
-		video.data[x * 4 + y * 4 * 640 + 1] = g;
-		video.data[x * 4 + y * 4 * 640 + 2] = b;
-		video.data[x * 4 + y * 4 * 640 + 3] = a;
-	};
-
-	this.getPixel = function (x, y) {
-		return {
-			r:video.data[x * 4 + y * 640 * 4 + 0],
-			g:video.data[x * 4 + y * 640 * 4 + 1],
-			b:video.data[x * 4 + y * 640 * 4 + 2],
-			a:video.data[x * 4 + y * 640 * 4 + 3]
-		};
-	};
-
 	var renderFrame = function () {
+		detectCollisions();
 		writeFps();
 		context.drawImage(background, 0, 0);
-		//context.putImageData(video, 0, 0);
 		for(var renderable in scene) {
-			if(scene.hasOwnProperty(renderable))
-				scene[renderable].draw(_this);
+			if(scene.hasOwnProperty(renderable)) {
+				scene[renderable].draw(context);
+			}
+		}
+	};
+
+	var detectCollisions = function() {
+		for(var a in scene) {
+			if(scene.hasOwnProperty(a)) {
+				for(var b in scene) {
+					if(scene.hasOwnProperty(b)) {
+						if(a != b) {
+							if(scene[a].isCollisioning(scene[b])) {
+								if(scene[a].notifyCollision)
+									scene[a].notifyCollision(scene[b]);
+								if(scene[b].notifyCollision)
+									scene[b].notifyCollision(scene[a]);
+								return;
+							}
+						}
+					}
+				}
+			}
 		}
 	};
 
 	this.setBackground = function(archivo) {
 		background = archivo.node;
+	};
+
+	this.add = function (renderable) {
+		renderable.id = "renderable" + _elementID++;
+		scene[renderable.id] = renderable;
+	};
+
+	this.remove = function(renderable) {
+		delete scene[renderable.id];
+		if(renderable.notifyRemoved)
+			renderable.notifyRemoved();
+	};
+
+	this.clearScene = function() {
+		for(var renderable in scene) {
+			if(scene.hasOwnProperty(renderable) && scene[renderable].notifyRemoved) {
+				scene[renderable].notifyRemoved();
+			}
+		}
+		scene = {};
 	};
 };

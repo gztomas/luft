@@ -46,12 +46,6 @@ BT.Image = function() {
 			}
 		};
 	};
-
-	this.create = function(width, height) {
-		_this.height = height;
-		_this.width = width;
-		_this.data = getAuxContext().createImageData(width, height).data;
-	};
 };
 
 BT.ImageLoader = function(imageNames, callback) {

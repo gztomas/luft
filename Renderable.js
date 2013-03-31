@@ -1,88 +1,124 @@
 var BT = window.BT || {};
 
-BT.Renderable = function(image, cuadro, x, y, ancho, alto, angulo, velocidad) {
-	
-    var _this = this;
-	this.x = x;
-	this.y = y;
-	this.angulo = angulo;
-    
-	var cuadros = image.height / alto;
-	var archivo = image.data;
-    var frameImage = new BT.Image();
-    frameImage.create(ancho, alto);
-	var imagen = frameImage.data;
+BT.SpaceObject = function(state) {
+	var _this = this;
 
-	this.setFrame = function (newFrame) {
-		newFrame = cuadros - 1 - newFrame;
-		var start = newFrame * alto * ancho * 4;
-		var end = (newFrame + 1) * alto * ancho * 4;
-		var source = archivo.subarray(start, end);
-		imagen.set(source);
+	this.calculate = function() {
+		var cosT = Math.cos(Math.PI * (state.angle - 90) / 180);
+		var sinT = Math.sin(Math.PI * (state.angle - 90) / 180);
+		state.x += cosT * state.speed;
+		state.y += sinT * state.speed;
+		state.angle += state.angularSpeed;
+		if(_this.notifyAfterCalculation)
+			_this.notifyAfterCalculation();
 	};
 
-	this.draw = function (renderer) {
-		var cosT = Math.cos(Math.PI * _this.angulo / 180);
-		var sinT = Math.sin(Math.PI * _this.angulo / 180);
-		var centrox = ancho / 2;
-		var centroy = alto / 2;
-		var coordx = Math.floor(_this.x - centrox);
-		var coordy = Math.floor(_this.y - centroy);
-		for(var v = 0; v < alto; v++) {
-			for(var h = 0; h < ancho; h++) {
-				var x1 = Math.floor((h - centrox) * cosT + (v - centroy) * sinT);
-				var y1 = Math.floor((v - centroy) * cosT - (h - centrox) * sinT);
-				x1 = Math.floor(x1 + ancho * 0.5);
-				y1 = Math.floor(y1 + alto * 0.5);
-				var offset = x1 * 4 + y1 * 4 * ancho;
-				if(x1 > 0 && y1 > 0 && x1 < ancho && y1 < alto && (imagen[offset + 0] || imagen[offset + 1] || imagen[offset + 2]))
-					renderer.setPixel(h + coordx, v + coordy,
-						imagen[offset + 0],
-						imagen[offset + 1],
-						imagen[offset + 2],
-						imagen[offset + 3]
-					);
+	this.getSize = function () {
+		return [state.width, state.height];
+	};
+
+	this.getPosition = function () {
+		return [state.x, state.y];
+	};
+
+	setInterval(_this.calculate, 10);
+};
+
+BT.Renderable = function(image, initialFrame, state) {
+    var _this = this;
+	var _animation = {
+		id: null,
+		tick: 0,
+		interval: 1,
+		reverse: false,
+		loop: false,
+		frame: initialFrame,
+		numberOfFrames: image.height / state.height,
+		callback: function() {}
+	};
+
+	this.state = state;
+
+	var updateAnimation = function() {
+		_animation.tick++;
+		if(_animation.tick % _animation.interval === 0) {
+			_animation.reverse ? _animation.frame++ : _animation.frame--;
+			if(_animation.frame < 0) {
+				_animation.frame = _animation.loop ? _animation.numberOfFrames - 1 : 0;
+				_animation.callback();
+			}
+			if(_animation.frame >= _animation.numberOfFrames) {
+				_animation.frame = _animation.loop ? 0 : _animation.numberOfFrames - 1;
+				_animation.callback();
 			}
 		}
 	};
 
-	this.moveForward = function () {
-		var cosT = Math.cos(Math.PI * (_this.angulo - 90) / 180);
-		var sinT = Math.sin(Math.PI * (_this.angulo - 90) / 180);
-		move(cosT * velocidad, sinT * velocidad);
+	this.notifyRemoved = function() {
+		_this.stopAnimation();
 	};
 
-	this.rotate = function (alpha) {
-		_this.angulo += alpha;
+	this.setFrame = function (newFrame) {
+		if(newFrame >= 0 && newFrame < _animation.numberOfFrames)
+			_animation.frame = newFrame;
+	};
+
+	this.startAnimation = function(interval, reverse, loop, callback) {
+		_animation.reverse = reverse;
+		_animation.loop = loop;
+		_animation.interval = interval || _animation.interval;
+		_animation.callback = callback || _animation.callback;
+		if(!_animation.id)
+			_animation.id = setInterval(updateAnimation, 10);
+	};
+
+	this.stopAnimation = function() {
+		clearInterval(_animation.id);
+		_animation.id = null;
+	};
+
+	this.draw = function (context) {
+		var angle = Math.PI * state.angle / 180;
+		var x = state.x;
+		var y = state.y;
+		context.translate(x, y);
+		context.rotate(angle);
+		context.drawImage(image.node, 0, state.height * (_animation.numberOfFrames - 1 - _animation.frame), state.width, state.height, -state.width / 2, -state.height / 2, state.width, state.height);
+		context.rotate(-angle);
+		context.translate(-x, -y);
 	};
 
 	this.isCollisioning = function (renderable) {
-		var margenx1 = ancho * 0.35;
-		var margeny1 = alto * 0.35;
+		var margenx1 = state.width * 0.35;
+		var margeny1 = state.height * 0.35;
 		var margenx2 = renderable.getSize()[0] * 0.35;
 		var margeny2 = renderable.getSize()[1] * 0.35;
-		return     _this.x + margenx1 > renderable.getPosition()[0] - margenx2 &&
-			_this.x - margenx1 < renderable.getPosition()[0] + margenx2 &&
-			_this.y + margeny1 > renderable.getPosition()[1] - margeny2 &&
-			_this.y - margeny1 < renderable.getPosition()[1] + margeny2;
+		return     state.x + margenx1 > renderable.getPosition()[0] - margenx2 &&
+			state.x - margenx1 < renderable.getPosition()[0] + margenx2 &&
+			state.y + margeny1 > renderable.getPosition()[1] - margeny2 &&
+			state.y - margeny1 < renderable.getPosition()[1] + margeny2;
+	};
+
+	this.nextFrame = function() {
+		_this.setFrame(_animation.frame + 1);
+	};
+
+	this.previousFrame = function() {
+		_this.setFrame(_animation.frame - 1);
+	};
+
+	this.nextFrameTo = function(frame) {
+		if(frame > _animation.frame)
+			_this.nextFrame();
+		if(frame < _animation.frame)
+			_this.previousFrame();
 	};
 
 	this.getSize = function () {
-		return [ancho, alto];
+		return [state.width, state.height];
 	};
 
 	this.getPosition = function () {
-		return [_this.x, _this.y];
+		return [state.x, state.y];
 	};
-
-	var move = function (h, v) {
-		_this.x += h; // Las ultimas cuatro lineas evitan que
-		_this.y += v; // el objeto se salga de la pantalla
-		if(_this.x + ancho * 0.5 > 630) _this.x = 630 - ancho * 0.5;
-		if(_this.x - ancho * 0.5 < 10) _this.x = 10 + ancho * 0.5;
-		if(_this.y + alto * 0.5 > 470) _this.y = 470 - alto * 0.5;
-		if(_this.y - alto * 0.5 < 10) _this.y = 10 + alto * 0.5;
-	};
-
-	this.setFrame(cuadro);
 };
