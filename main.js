@@ -98,13 +98,10 @@ BT.Game = function(images) {
     };
     var init = function() {
 		renderer.init();
-
 		setUpInitialScene();
 		stage = intro;
-
-		setUpMatchScene();
-		stage = match;
-
+		//setUpMatchScene();
+		//stage = match;
 		setInterval(function() {
 			stage();
 		}, 10);

@@ -13,12 +13,20 @@ BT.SpaceObject = function(state) {
 			_this.notifyAfterCalculation();
 	};
 
-	this.getSize = function () {
-		return [state.width, state.height];
+	this.isCollisioning = function (o) {
+		var tolerance = 0.35;
+		var x1 = state.width * tolerance;
+		var y1 = state.height * tolerance;
+		var x2 = o.getState().width * tolerance;
+		var y2 = o.getState().height * tolerance;
+		return	state.x + x1 > o.getState().x - x2 &&
+				state.x - x1 < o.getState().x + x2 &&
+				state.y + y1 > o.getState().y - y2 &&
+				state.y - y1 < o.getState().y + y2;
 	};
 
-	this.getPosition = function () {
-		return [state.x, state.y];
+	this.getState = function() {
+		return state;
 	};
 
 	setInterval(_this.calculate, 10);
@@ -88,17 +96,6 @@ BT.Renderable = function(image, initialFrame, state) {
 		context.translate(-x, -y);
 	};
 
-	this.isCollisioning = function (renderable) {
-		var margenx1 = state.width * 0.35;
-		var margeny1 = state.height * 0.35;
-		var margenx2 = renderable.getSize()[0] * 0.35;
-		var margeny2 = renderable.getSize()[1] * 0.35;
-		return     state.x + margenx1 > renderable.getPosition()[0] - margenx2 &&
-			state.x - margenx1 < renderable.getPosition()[0] + margenx2 &&
-			state.y + margeny1 > renderable.getPosition()[1] - margeny2 &&
-			state.y - margeny1 < renderable.getPosition()[1] + margeny2;
-	};
-
 	this.nextFrame = function() {
 		_this.setFrame(_animation.frame + 1);
 	};
@@ -112,13 +109,5 @@ BT.Renderable = function(image, initialFrame, state) {
 			_this.nextFrame();
 		if(frame < _animation.frame)
 			_this.previousFrame();
-	};
-
-	this.getSize = function () {
-		return [state.width, state.height];
-	};
-
-	this.getPosition = function () {
-		return [state.x, state.y];
 	};
 };

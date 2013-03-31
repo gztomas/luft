@@ -61,7 +61,7 @@ BT.Renderer = function () {
 			if(scene.hasOwnProperty(a)) {
 				for(var b in scene) {
 					if(scene.hasOwnProperty(b)) {
-						if(a != b) {
+						if(a != b && scene[a].isCollisioning && scene[b].isCollisioning) {
 							if(scene[a].isCollisioning(scene[b])) {
 								if(scene[a].notifyCollision)
 									scene[a].notifyCollision(scene[b]);

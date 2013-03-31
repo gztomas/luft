@@ -13,9 +13,6 @@ BT.Laser = function(world, type) {
 		});
 		BT.SpaceObject.apply(this, [_renderable.state]);
 	};
-	this.isCollisioning = function() {
-		return _renderable.isCollisioning.apply(_renderable, arguments);
-	};
 	this.notifyAfterCalculation = function() {
 		if(	_renderable.state.y < -_renderable.state.height ||
 			_renderable.state.y > world.height + _renderable.state.height ||
@@ -53,7 +50,8 @@ BT.Ship = function(world, type) {
 	};
 
 	this.turnEngineOff = function() {
-		_renderable.state.speed = 0;
+		if(!_this.exploding)
+			_renderable.state.speed = 0;
 	};
 
 	this.turnRightBearingOn = function() {
@@ -65,8 +63,10 @@ BT.Ship = function(world, type) {
 	};
 
 	this.turnRightBearingOff = function() {
-		_renderable.state.angularSpeed = 0;
-		_renderable.stopAnimation();
+		if(!_this.exploding) {
+			_renderable.state.angularSpeed = 0;
+			_renderable.stopAnimation();
+		}
 	};
 
 	this.turnLeftBearingOn = function() {
@@ -77,8 +77,10 @@ BT.Ship = function(world, type) {
 	};
 
 	this.turnLeftBearingOff = function() {
-		_renderable.state.angularSpeed = 0;
-		_renderable.stopAnimation();
+		if(!_this.exploding) {
+			_renderable.state.angularSpeed = 0;
+			_renderable.stopAnimation();
+		}
 	};
 
 	this.turnCannonOn = function() {
@@ -95,7 +97,8 @@ BT.Ship = function(world, type) {
 	};
 
 	this.turnCannonOff = function() {
-		clearInterval(_cannonTimerID);
+		if(!_this.exploding)
+			clearInterval(_cannonTimerID);
 	};
 
 	this.notifyAfterCalculation = function() {
@@ -140,10 +143,6 @@ BT.Ship = function(world, type) {
 				_this.deploy();
 			}
 		});
-	};
-
-	this.isCollisioning = function() {
-		return _renderable.isCollisioning.apply(_renderable, arguments);
 	};
 
 	this.draw = function() {
