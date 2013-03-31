@@ -1,4 +1,4 @@
-var SpriteGenerator = new function() {
+new function() {
 
 	var createButton = function(label, callback) {
 		var button = document.createElement("input");
