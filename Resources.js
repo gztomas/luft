@@ -9,7 +9,7 @@ BT.Resources = new function() {
 
 	this.sprite = null;
 
-	var resourcesLoadedCallback = function() {
+	var onResourcesLoaded = function() {
 		new BT.Game();
 	};
 
@@ -42,9 +42,9 @@ BT.Resources = new function() {
 		document.body.removeChild(progressBar);
 		image.onload = function() {
 			imageLoaded = true;
-			if(_this.sprite && resourcesLoadedCallback) {
-				resourcesLoadedCallback();
-				resourcesLoadedCallback = null;
+			if(_this.sprite && onResourcesLoaded) {
+				onResourcesLoaded();
+				onResourcesLoaded = null;
 			}
 		};
 		image.src = "data:image/jpeg;base64," + BT.Utility.base64Encode(request.responseText);
@@ -57,9 +57,9 @@ BT.Resources = new function() {
 			}
 		}
 		_this.sprite = data;
-		if(imageLoaded && resourcesLoadedCallback) {
-			resourcesLoadedCallback();
-			resourcesLoadedCallback = null;
+		if(imageLoaded && onResourcesLoaded) {
+			onResourcesLoaded();
+			onResourcesLoaded = null;
 		}
 	};
 
