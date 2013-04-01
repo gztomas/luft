@@ -5,18 +5,23 @@ BT.Resources = new function() {
 	var image = new Image();
 	var imageLoaded = false;
 	var _this = this;
+	var request;
 
 	this.sprites = null;
+
 
 	var resourcesLoadedCallback = function() {
 		new BT.Game();
 	};
 
 	var init = function() {
-		image.onloadstart = showProgressBar;
-		image.onprogress = updateProgressBar;
-		image.onload = onLoad;
-		image.src = "sprite.png";
+		request = new XMLHttpRequest();
+		request.onloadstart = showProgressBar;
+		request.onprogress = updateProgressBar;
+		request.onload = onLoad;
+		request.open("GET", "sprite.png", true);
+		request.overrideMimeType('text/plain; charset=x-user-defined');
+		request.send(null);
 	};
 
 	var showProgressBar = function() {
@@ -30,15 +35,20 @@ BT.Resources = new function() {
 	var updateProgressBar = function(e) {
 		if(e.lengthComputable)
 			progressBar.value = e.loaded / e.total * 100;
+		else
+			progressBar.removeAttribute("value");
 	};
 
 	var onLoad = function() {
 		document.body.removeChild(progressBar);
-		imageLoaded = true;
-		if(_this.sprites && resourcesLoadedCallback) {
-			resourcesLoadedCallback();
-			resourcesLoadedCallback = null;
-		}
+		image.onload = function() {
+			imageLoaded = true;
+			if(_this.sprites && resourcesLoadedCallback) {
+				resourcesLoadedCallback();
+				resourcesLoadedCallback = null;
+			}
+		};
+		image.src = "data:image/jpeg;base64," + BT.Utility.base64Encode(request.responseText);
 	};
 
 	this.setSpriteData = function(data) {
