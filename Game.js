@@ -5,34 +5,29 @@ BT.Game = function() {
 	var renderer = new BT.Renderer();
 	var stage;
 
+	var sceneWidth = 1200;
+	var sceneHeight = 800;
+
 	var setUpInitialScene = function() {
-		var versus = new BT.Renderable(BT.Resources.sprites.versus, 27, {x: 320, y: 280, width: 64, height: 84});
-		var nave1 = new BT.Renderable(BT.Resources.sprites.silverShipDemo, 0, {x: 180, y: 280, width: 64, height: 64});
-		var nave2 = new BT.Renderable(BT.Resources.sprites.blackShipDemo, 0, {x: 460, y: 280, width: 80, height: 68});
+		var versus = new BT.Renderable(BT.Resources.sprites.versus, 27, {x: sceneWidth / 2, y: sceneHeight / 2, width: 64, height: 84});
+		var silverShipDemo = new BT.Renderable(BT.Resources.sprites.silverShipDemo, 0, {x: sceneWidth / 3, y: sceneHeight / 2, width: 64, height: 64, scale: 2});
+		var blackShipDemo = new BT.Renderable(BT.Resources.sprites.blackShipDemo, 0, {x: sceneWidth * 2 / 3, y: sceneHeight / 2, width: 80, height: 68, scale: 2});
 		versus.startAnimation(3, false, true);
-		nave1.startAnimation(3, false, true);
-		nave2.startAnimation(3, false, true);
+		silverShipDemo.startAnimation(3, false, true);
+		blackShipDemo.startAnimation(3, false, true);
 		renderer.clearScene();
-		renderer.setBackground(BT.Resources.sprites.fight);
+		renderer.setBackground(null);
 		renderer.add(versus);
-		renderer.add(nave1);
-		renderer.add(nave2);
-	};
-	var setUpMenuScene = function() {
-		playMenuItem = new BT.Renderable(BT.Resources.sprites.play, 0, {x: 320, y: 50, width: 152, height: 30});
-		exitMenuItem = new BT.Renderable(BT.Resources.sprites.exit, 1, {x: 320, y: 80, width: 152, height: 30});
-		renderer.clearScene();
-		renderer.setBackground(BT.Resources.sprites.mountains);
-		renderer.add(playMenuItem);
-		renderer.add(exitMenuItem);
+		renderer.add(silverShipDemo);
+		renderer.add(blackShipDemo);
 	};
 	var setUpMatchScene = function() {
 		silverShip = new BT.Ship(renderer, 1);
 		blackShip = new BT.Ship(renderer, 2);
-		silverShip.deploy(100, 420, 0);
-		blackShip.deploy(540, 60, -180);
+		silverShip.deploy(sceneWidth / 3, sceneHeight / 2, -90);
+		blackShip.deploy(sceneWidth * 2 / 3, sceneHeight / 2, 90);
 		renderer.clearScene();
-		renderer.setBackground(BT.Resources.sprites.space);
+		renderer.setBackground(null);
 		renderer.add(silverShip);
 		renderer.add(blackShip);
 		BT.MainKeyboardShipController.assign(silverShip);
@@ -47,9 +42,9 @@ BT.Game = function() {
 			renderer.setBackground(BT.Resources.sprites.winner);
 			var ship;
 			if(silverShip.lives === 0)
-				ship = new BT.Renderable(BT.Resources.sprites.silverShipDemo, 0, {x: 320, y: 300, width: 64, height: 64});
+				ship = new BT.Renderable(BT.Resources.sprites.silverShipDemo, 0, {x: sceneWidth / 2, y: sceneHeight / 2 + 100, width: 64, height: 64, scale: 3});
 			else
-				ship = new BT.Renderable(BT.Resources.sprites.blackShipDemo, 0, {x: 320, y: 300, width: 80, height: 68});
+				ship = new BT.Renderable(BT.Resources.sprites.blackShipDemo, 0, {x: sceneWidth / 2, y: sceneHeight / 2 + 100, width: 80, height: 68, scale: 3});
 			renderer.add(ship);
 			ship.startAnimation(4, false, true);
 		}
@@ -58,8 +53,8 @@ BT.Game = function() {
 	var intro = function() {
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
 			BT.Keyboard.flush();
-			setUpMenuScene();
-			stage = menu;
+			setUpMatchScene();
+			stage = match;
 		}
 	};
 	var menu = function() {
@@ -91,7 +86,7 @@ BT.Game = function() {
 	var gameOver = function() {
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
 			BT.Keyboard.flush();
-			setUpMenuScene();
+			setUpInitialScene();
 			stage = menu;
 		}
 	};

@@ -93,7 +93,7 @@ BT.Renderable = function(image, initialFrame, state, unbound) {
 		_animation.id = null;
 	};
 
-	var draw = function(context, x, y, angle) {
+	var draw = function(context, x, y, angle, scale) {
 		context.translate(x, y);
 		context.rotate(angle);
 		context.drawImage(
@@ -102,10 +102,10 @@ BT.Renderable = function(image, initialFrame, state, unbound) {
 			image.y + state.height * (_animation.numberOfFrames - 1 - _animation.frame),
 			state.width,
 			state.height,
-			-state.width / 2,
-			-state.height / 2,
-			state.width,
-			state.height
+			-state.width * scale / 2,
+			-state.height * scale / 2,
+			state.width * scale,
+			state.height * scale
 		);
 		context.rotate(-angle);
 		context.translate(-x, -y);
@@ -115,13 +115,14 @@ BT.Renderable = function(image, initialFrame, state, unbound) {
 		var angle = Math.PI * state.angle / 180;
 		var x = state.x;
 		var y = state.y;
+		var scale = state.scale || 1;
 
-		draw(context, x, y, angle);
+		draw(context, x, y, angle, scale);
 		if(unbound) {
-			draw(context, x + context.canvas.width, y, angle);
-			draw(context, x - context.canvas.width, y, angle);
-			draw(context, x, y + context.canvas.height, angle);
-			draw(context, x, y - context.canvas.height, angle);
+			draw(context, x + context.canvas.width, y, angle, scale);
+			draw(context, x - context.canvas.width, y, angle, scale);
+			draw(context, x, y + context.canvas.height, angle, scale);
+			draw(context, x, y - context.canvas.height, angle, scale);
 		}
 	};
 

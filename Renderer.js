@@ -11,8 +11,8 @@ BT.Renderer = function () {
 	var scene = {};
 	var _elementID = 0;
 
-	this.width = 640;
-	this.height = 480;
+	this.width = 1200;
+	this.height = 800;
 
 	var writeFps = function() {
 		frameTime.push(new Date());
@@ -31,12 +31,7 @@ BT.Renderer = function () {
 
 	this.init = function() {
 		canvas = window.document.createElement("canvas");
-		canvas.style.width = _this.width + "px";
-		canvas.style.height = _this.height + "px";
-		canvas.style.marginLeft = 'auto';
-		canvas.style.marginRight = 'auto';
-		canvas.style.marginTop = 'auto';
-		canvas.style.marginBottom = 'auto';
+		canvas.className = "gameplay";
 		window.document.body.insertBefore(canvas, window.document.body.firstChild);
 		canvas.width = _this.width;
 		canvas.height = _this.height;
@@ -48,7 +43,10 @@ BT.Renderer = function () {
 	var renderFrame = function () {
 		detectCollisions();
 		writeFps();
-		context.drawImage(background.node, background.x, background.y, background.width, background.height, 0, 0, _this.width, _this.height);
+		if(background)
+			context.drawImage(background.node, background.x, background.y, background.width, background.height, 0, 0, _this.width, _this.height);
+		else
+			context.clearRect(0, 0, _this.width, _this.height);
 		var sortedRenderables = [];
 		for(var renderable in scene) {
 			if(scene.hasOwnProperty(renderable)) {
