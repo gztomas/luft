@@ -1,14 +1,13 @@
 var BT = window.BT || {};
 
 BT.Resources = new function() {
+	var _this = this;
 	var progressBar;
 	var image = new Image();
 	var imageLoaded = false;
-	var _this = this;
 	var request;
 
 	this.sprites = null;
-
 
 	var resourcesLoadedCallback = function() {
 		new BT.Game();

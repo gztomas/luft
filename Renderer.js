@@ -49,10 +49,20 @@ BT.Renderer = function () {
 		detectCollisions();
 		writeFps();
 		context.drawImage(background.node, background.x, background.y, background.width, background.height, 0, 0, _this.width, _this.height);
+		var sortedRenderables = [];
 		for(var renderable in scene) {
 			if(scene.hasOwnProperty(renderable)) {
-				scene[renderable].draw(context);
+				sortedRenderables.push(scene[renderable]);
 			}
+		}
+		sortedRenderables.sort(function(a, b) {
+			if(a.getState && b.getState)
+				return a.getState().z - b.getState().z;
+			else
+				return 0;
+		});
+		for(var i = 0; i < sortedRenderables.length; i++) {
+			sortedRenderables[i].draw(context);
 		}
 	};
 
