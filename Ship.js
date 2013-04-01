@@ -8,7 +8,7 @@ BT.Laser = function(world, type) {
 		return _renderable.draw.apply(_renderable, arguments);
 	};
 	this.deploy = function(x, y, angle) {
-		var image = type == 1 ? BT.Resources.sprites.rocket : BT.Resources.sprites.laser;
+		var image = type == 1 ? BT.Resources.sprite.rocket : BT.Resources.sprite.laser;
 		_renderable = new BT.Renderable(image, 0, {
 			width: 40, height: 40, x: x, y: y, angle: angle, z: 0, speed: 20, angularSpeed: 0
 		});
@@ -137,8 +137,8 @@ BT.Ship = function(world, type) {
 		_deployState.angle = angle || _deployState.angle;
 		_disabled = false;
 		switch(type) {
-			case 1: _deployState.width = 44; _deployState.height = 56; image = BT.Resources.sprites.blackShip; break;
-			case 2: _deployState.width = 64; _deployState.height = 52; image = BT.Resources.sprites.silverShip; break;
+			case 1: _deployState.width = 44; _deployState.height = 56; image = BT.Resources.sprite.blackShip; break;
+			case 2: _deployState.width = 64; _deployState.height = 52; image = BT.Resources.sprite.silverShip; break;
 		}
 		_renderable = new BT.Renderable(image, 10, JSON.parse(JSON.stringify(_deployState)), true);
 		BT.SpaceObject.apply(this, [_renderable.state]);
@@ -154,8 +154,8 @@ BT.Ship = function(world, type) {
 		_this.turnCannonOff();
 		disable();
 		switch(type) {
-			case 1: _renderable = new BT.Renderable(BT.Resources.sprites.blueExplosion, 12, {x: _renderable.state.x, y: _renderable.state.y, width: 84, height: 84}, true); break;
-			case 2: _renderable = new BT.Renderable(BT.Resources.sprites.explosion, 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64}, true); break;
+			case 1: _renderable = new BT.Renderable(BT.Resources.sprite.blueExplosion, 12, {x: _renderable.state.x, y: _renderable.state.y, width: 84, height: 84}, true); break;
+			case 2: _renderable = new BT.Renderable(BT.Resources.sprite.explosion, 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64}, true); break;
 		}
 		_renderable.startAnimation(2, false, false, function() {
 			_renderable.stopAnimation();

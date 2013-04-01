@@ -7,7 +7,7 @@ BT.Resources = new function() {
 	var imageLoaded = false;
 	var request;
 
-	this.sprites = null;
+	this.sprite = null;
 
 	var resourcesLoadedCallback = function() {
 		new BT.Game();
@@ -42,7 +42,7 @@ BT.Resources = new function() {
 		document.body.removeChild(progressBar);
 		image.onload = function() {
 			imageLoaded = true;
-			if(_this.sprites && resourcesLoadedCallback) {
+			if(_this.sprite && resourcesLoadedCallback) {
 				resourcesLoadedCallback();
 				resourcesLoadedCallback = null;
 			}
@@ -56,7 +56,7 @@ BT.Resources = new function() {
 				data[sprite].node = image;
 			}
 		}
-		_this.sprites = data;
+		_this.sprite = data;
 		if(imageLoaded && resourcesLoadedCallback) {
 			resourcesLoadedCallback();
 			resourcesLoadedCallback = null;

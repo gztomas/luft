@@ -9,9 +9,9 @@ BT.Game = function() {
 	var sceneHeight = 800;
 
 	var setUpInitialScene = function() {
-		var versus = new BT.Renderable(BT.Resources.sprites.versus, 27, {x: sceneWidth / 2, y: sceneHeight / 2, width: 64, height: 84});
-		var silverShipDemo = new BT.Renderable(BT.Resources.sprites.silverShipDemo, 0, {x: sceneWidth / 3, y: sceneHeight / 2, width: 64, height: 64, scale: 2});
-		var blackShipDemo = new BT.Renderable(BT.Resources.sprites.blackShipDemo, 0, {x: sceneWidth * 2 / 3, y: sceneHeight / 2, width: 80, height: 68, scale: 2});
+		var versus = new BT.Renderable(BT.Resources.sprite.versus, 27, {x: sceneWidth / 2, y: sceneHeight / 2, width: 64, height: 84});
+		var silverShipDemo = new BT.Renderable(BT.Resources.sprite.silverShipDemo, 0, {x: sceneWidth / 3, y: sceneHeight / 2, width: 64, height: 64, scale: 2});
+		var blackShipDemo = new BT.Renderable(BT.Resources.sprite.blackShipDemo, 0, {x: sceneWidth * 2 / 3, y: sceneHeight / 2, width: 80, height: 68, scale: 2});
 		versus.startAnimation(3, false, true);
 		silverShipDemo.startAnimation(3, false, true);
 		blackShipDemo.startAnimation(3, false, true);
@@ -36,15 +36,15 @@ BT.Game = function() {
 	var setUpGameOverScene = function() {
 		renderer.clearScene();
 		if(silverShip.lives === 0 && blackShip.lives === 0) {
-			renderer.setBackground(BT.Resources.sprites.draw);
+			renderer.setBackground(BT.Resources.sprite.draw);
 		}
 		else {
-			renderer.setBackground(BT.Resources.sprites.winner);
+			renderer.setBackground(BT.Resources.sprite.winner);
 			var ship;
 			if(silverShip.lives === 0)
-				ship = new BT.Renderable(BT.Resources.sprites.silverShipDemo, 0, {x: sceneWidth / 2, y: sceneHeight / 2 + 100, width: 64, height: 64, scale: 3});
+				ship = new BT.Renderable(BT.Resources.sprite.silverShipDemo, 0, {x: sceneWidth / 2, y: sceneHeight / 2 + 100, width: 64, height: 64, scale: 3});
 			else
-				ship = new BT.Renderable(BT.Resources.sprites.blackShipDemo, 0, {x: sceneWidth / 2, y: sceneHeight / 2 + 100, width: 80, height: 68, scale: 3});
+				ship = new BT.Renderable(BT.Resources.sprite.blackShipDemo, 0, {x: sceneWidth / 2, y: sceneHeight / 2 + 100, width: 80, height: 68, scale: 3});
 			renderer.add(ship);
 			ship.startAnimation(4, false, true);
 		}
