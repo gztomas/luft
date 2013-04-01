@@ -28,6 +28,7 @@ BT.Ship = function(world, type) {
 	var _this = this;
 	var _renderable;
 	var _maxSpeed = 10;
+	var _acceleration = 0.1;
 	var _maxAngularSpeed = 5;
 	var _deployState = {x: 0, y: 0, angle: 0, z: 1, speed: 0, angularSpeed: 0};
 	var _firePeriod = 150;
@@ -53,12 +54,12 @@ BT.Ship = function(world, type) {
 
 	this.turnEngineOn = function() {
 		if(!_disabled)
-			_renderable.state.speed = _maxSpeed;
+			_renderable.state.acceleration = _acceleration;
 	};
 
 	this.turnEngineOff = function() {
 		if(!_disabled)
-			_renderable.state.speed = 0;
+			_renderable.state.acceleration = 0;
 	};
 
 	this.turnRightBearingOn = function() {

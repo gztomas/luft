@@ -2,10 +2,13 @@ var BT = window.BT || {};
 
 BT.SpaceObject = function(state) {
 	var _this = this;
+	var _friction = 0.01;
+	state.acceleration = 0;
 
 	this.calculate = function() {
 		var cosT = Math.cos(Math.PI * (state.angle - 90) / 180);
 		var sinT = Math.sin(Math.PI * (state.angle - 90) / 180);
+		state.speed += state.acceleration - _friction * state.speed;
 		state.x += cosT * state.speed;
 		state.y += sinT * state.speed;
 		state.angle += state.angularSpeed;
