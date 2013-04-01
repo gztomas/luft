@@ -59,10 +59,10 @@ BT.Game = function() {
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
 			BT.Keyboard.flush();
 			setUpMenuScene();
-            stage = menu;
+			stage = menu;
 		}
-    };
-    var menu = function() {
+	};
+	var menu = function() {
 		var selectedItem = 1;
 		if(BT.Keyboard.read(BT.Keys.UP)) {
 			playMenuItem.setFrame(0);
@@ -81,27 +81,27 @@ BT.Game = function() {
 				stage = match;
 			}
 		}
-    };
-    var match = function() {
+	};
+	var match = function() {
 		if(silverShip.lives === 0 || blackShip.lives === 0) {
 			setUpGameOverScene();
 			stage = gameOver;
 		}
-    };
-    var gameOver = function() {
+	};
+	var gameOver = function() {
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
 			BT.Keyboard.flush();
 			setUpMenuScene();
 			stage = menu;
 		}
-    };
-    var init = function() {
+	};
+	var init = function() {
 		renderer.init();
 		setUpInitialScene();
 		stage = intro;
 		setInterval(function() {
 			stage();
 		}, 10);
-    };
-    init();
+	};
+	init();
 };
