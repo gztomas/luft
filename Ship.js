@@ -22,7 +22,7 @@ BT.Laser = function(world, type) {
 			world.remove(_this);
 		}
 	};
-	this.notifyCollision = function(target) {
+	this.notifyCollision = function(/*target*/) {
 		//if(target.shipID != _this.ownerID)
 		//	world.remove(_this);
 	};
@@ -153,7 +153,10 @@ BT.Ship = function(world, type) {
 		_this.lives--;
 		_this.turnCannonOff();
 		disable();
-		_renderable = new BT.Renderable(BT.Resources.sprites.explosion, 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64}, true);
+		switch(type) {
+			case 1: _renderable = new BT.Renderable(BT.Resources.sprites.blueExplosion, 12, {x: _renderable.state.x, y: _renderable.state.y, width: 84, height: 84}, true); break;
+			case 2: _renderable = new BT.Renderable(BT.Resources.sprites.explosion, 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64}, true); break;
+		}
 		_renderable.startAnimation(2, false, false, function() {
 			_renderable.stopAnimation();
 			if(_this.lives !== 0) {

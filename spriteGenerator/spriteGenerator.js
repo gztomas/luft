@@ -14,9 +14,14 @@ new function() {
 			img.offset = width;
 			img.name = imageData[1];
 			img.alpha = imageData[2];
-			width += img.width;
-			if(img.height > height)
-				height = img.height;
+			img.scale = imageData[3] || 1;
+			img.columns = imageData[4] || 1;
+			img.rows = imageData[5] || 1;
+			var resultWidth = img.width * img.scale / img.columns;
+			var resultHeight = img.height * img.scale * img.columns;
+			width += resultWidth;
+			if(resultHeight > height)
+				height = resultHeight;
 			images.push(img);
 			callback();
 		};
@@ -42,25 +47,21 @@ new function() {
 	result.value += "{\n";
 
 	loadImages([
-		["image/nave1big.bmp", "blackShipDemo", true],
-		["image/nave2big.bmp", "silverShipDemo", true],
-		["image/versus.bmp", "versus", true],
-		["image/nave1.bmp", "blackShip", true],
-		["image/nave2.bmp", "silverShip", true],
-		["image/explo.bmp", "explosion", true],
-		["image/laser1.bmp", "rocket", true],
-		["image/laser2.bmp", "laser", true],
-		["image/jugar.bmp", "play", true],
-		["image/salir.bmp", "exit", true],
-		["image/backmenu.bmp", "mountains", false],
-		["image/fondo.bmp", "space", false],
-		["image/intro.bmp", "fight", false],
-		["image/empate.bmp", "draw", false],
-		["image/ganador.bmp", "winner", false]
+		["../image/nave1big.bmp", "blackShipDemo", true],
+		["../image/nave2big.bmp", "silverShipDemo", true],
+		["../image/versus.bmp", "versus", true],
+		["../image/nave1.bmp", "blackShip", true],
+		["../image/nave2.bmp", "silverShip", true],
+		["../image/explo.bmp", "explosion", true],
+		["../image/blueExplosion.jpg", "blueExplosion", true, 0.7, 3, 4],
+		["../image/laser1.bmp", "rocket", true],
+		["../image/laser2.bmp", "laser", true],
+		["../image/empate.bmp", "draw", false],
+		["../image/ganador.bmp", "winner", false]
 	]);
 
 	createButton("export", function() {
-		var resultBase64 = canvas.toDataURL("image/a.tiff");
+		var resultBase64 = canvas.toDataURL("result.tiff");
 		var img = document.createElement("img");
 		img.src = resultBase64;
 		document.body.appendChild(img);
@@ -78,15 +79,23 @@ new function() {
 
 		for(var j = 0; j < images.length; j++) {
 			var img = images[j];
-			context.drawImage(img, img.offset, 0);
-			var imageData = context.getImageData(img.offset, 0, img.width, img.height);
+			var frameWidth = img.width / img.columns;
+			var frameHeight = img.height / img.rows;
+			var resultWidth = img.width * img.scale / img.columns;
+			var resultHeight = img.height * img.scale * img.columns;
+			for(var x = 0; x < img.columns; x++)
+				for(var y = 0; y < img.rows; y++)
+					context.drawImage(img,
+						x * frameWidth, y * frameHeight, frameWidth, frameHeight,	//source
+						img.offset, (x + y * img.columns) * frameHeight * img.scale, frameWidth * img.scale, frameHeight * img.scale);	//destination
+			var imageData = context.getImageData(img.offset, 0, resultWidth, resultHeight);
 			var pixelData = imageData.data;
 			for(var i = 0; i < pixelData.length && img.alpha; i+=4) {
 				if(!pixelData[i] && !pixelData[i+1] && !pixelData[i+2])
 					pixelData[i+3] = 0;
 			}
 			context.putImageData(imageData, img.offset, 0);
-			result.value += "\t" + img.name + ": {x: " + img.offset + ", y: 0, width: " + img.width + ", height: " + img.height + "}";
+			result.value += "\t" + img.name + ": {x: " + img.offset + ", y: 0, width: " + resultWidth + ", height: " + resultHeight + "}";
 			if(j == images.length - 1)
 				result.value += "\n}";
 			else
