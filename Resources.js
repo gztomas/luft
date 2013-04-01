@@ -13,7 +13,6 @@ BT.Resources = new function() {
 	};
 
 	var init = function() {
-		showProgressBar();
 		image.onloadstart = showProgressBar;
 		image.onprogress = updateProgressBar;
 		image.onload = onLoad;
