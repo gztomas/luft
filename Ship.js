@@ -68,7 +68,6 @@ BT.Ship = function(world, type) {
 
 	this.turnRightBearingOn = function() {
 		if(!_disabled) {
-			console.log("turnRightBearingOn");
 			_renderable.state.angularSpeed = _maxAngularSpeed;
 			_renderable.startAnimation(1, false, false);
 		}
@@ -141,7 +140,7 @@ BT.Ship = function(world, type) {
 			case 1: _deployState.width = 44; _deployState.height = 56; image = BT.Resources.sprites.blackShip; break;
 			case 2: _deployState.width = 64; _deployState.height = 52; image = BT.Resources.sprites.silverShip; break;
 		}
-		_renderable = new BT.Renderable(image, 10, JSON.parse(JSON.stringify(_deployState)));
+		_renderable = new BT.Renderable(image, 10, JSON.parse(JSON.stringify(_deployState)), true);
 		BT.SpaceObject.apply(this, [_renderable.state]);
 	};
 
@@ -154,7 +153,7 @@ BT.Ship = function(world, type) {
 		_this.lives--;
 		_this.turnCannonOff();
 		disable();
-		_renderable = new BT.Renderable(BT.Resources.sprites.explosion, 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64});
+		_renderable = new BT.Renderable(BT.Resources.sprites.explosion, 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64}, true);
 		_renderable.startAnimation(2, false, false, function() {
 			_renderable.stopAnimation();
 			if(_this.lives !== 0) {

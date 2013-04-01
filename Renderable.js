@@ -40,7 +40,7 @@ BT.SpaceObject = function(state) {
 	setInterval(_this.calculate, 10);
 };
 
-BT.Renderable = function(image, initialFrame, state) {
+BT.Renderable = function(image, initialFrame, state, unbound) {
     var _this = this;
 	var _animation = {
 		id: null,
@@ -93,10 +93,7 @@ BT.Renderable = function(image, initialFrame, state) {
 		_animation.id = null;
 	};
 
-	this.draw = function (context) {
-		var angle = Math.PI * state.angle / 180;
-		var x = state.x;
-		var y = state.y;
+	var draw = function(context, x, y, angle) {
 		context.translate(x, y);
 		context.rotate(angle);
 		context.drawImage(
@@ -112,6 +109,20 @@ BT.Renderable = function(image, initialFrame, state) {
 		);
 		context.rotate(-angle);
 		context.translate(-x, -y);
+	};
+
+	this.draw = function (context) {
+		var angle = Math.PI * state.angle / 180;
+		var x = state.x;
+		var y = state.y;
+
+		draw(context, x, y, angle);
+		if(unbound) {
+			draw(context, x + context.canvas.width, y, angle);
+			draw(context, x - context.canvas.width, y, angle);
+			draw(context, x, y + context.canvas.height, angle);
+			draw(context, x, y - context.canvas.height, angle);
+		}
 	};
 
 	this.nextFrame = function() {
