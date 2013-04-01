@@ -37,6 +37,7 @@ BT.Ship = function(world, type) {
 	var _firePeriod = 150;
 	var _cannonTimerID;
 	var _disabled = false;
+	var _screeenBound = false;
 
 	this.lives = 6;
 	this.shipID = "ship" + BT.Ship.nextID++;
@@ -113,15 +114,21 @@ BT.Ship = function(world, type) {
 
 	this.notifyAfterCalculation = function() {
 		var state = _renderable.state;
-		var margin = 0;
-		if(state.x + state.width * 0.5 > world.width - margin)
-			state.x = world.width - margin - state.width * 0.5;
-		if(state.x - state.width * 0.5 < margin)
-			state.x = margin + state.width * 0.5;
-		if(state.y + state.height * 0.5 > world.height - margin)
-			state.y = world.height - margin - state.height * 0.5;
-		if(state.y - state.height * 0.5 < margin)
-			state.y = margin + state.height * 0.5;
+		if(_screeenBound) {
+			var margin = 0;
+			if(state.x + state.width * 0.5 > world.width - margin)
+				state.x = world.width - margin - state.width * 0.5;
+			if(state.x - state.width * 0.5 < margin)
+				state.x = margin + state.width * 0.5;
+			if(state.y + state.height * 0.5 > world.height - margin)
+				state.y = world.height - margin - state.height * 0.5;
+			if(state.y - state.height * 0.5 < margin)
+				state.y = margin + state.height * 0.5;
+		}
+		else {
+			state.x = state.x > 0 ? state.x % world.width : state.x + world.width;
+			state.y = state.y > 0 ? state.y % world.height : state.y + world.height;
+		}
 	};
 
 	this.deploy = function(x, y, angle) {
