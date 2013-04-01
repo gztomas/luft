@@ -33,30 +33,36 @@ BT.Ship = function(world, type) {
 	var _firePeriod = 150;
 	var _cannonTimerID;
 	var _shipID = "ship" + BT.Ship.nextID++;
+	var _disabled = false;
 
 	this.lives = 6;
 
 	setInterval(function() {
-		if(!_this.exploding)
+		if(!_disabled)
 			_renderable.nextFrameTo(10);
 	}, 20);
+
+	var disable = function() {
+		_this.turnCannonOff();
+		_disabled = true;
+	};
 
 	this.rotate = function (alpha) {
 		_renderable.state.angle += alpha;
 	};
 
 	this.turnEngineOn = function() {
-		if(!_this.exploding)
+		if(!_disabled)
 			_renderable.state.speed = _maxSpeed;
 	};
 
 	this.turnEngineOff = function() {
-		if(!_this.exploding)
+		if(!_disabled)
 			_renderable.state.speed = 0;
 	};
 
 	this.turnRightBearingOn = function() {
-		if(!_this.exploding) {
+		if(!_disabled) {
 			console.log("turnRightBearingOn");
 			_renderable.state.angularSpeed = _maxAngularSpeed;
 			_renderable.startAnimation(1, false, false);
@@ -64,28 +70,28 @@ BT.Ship = function(world, type) {
 	};
 
 	this.turnRightBearingOff = function() {
-		if(!_this.exploding) {
+		if(!_disabled) {
 			_renderable.state.angularSpeed = 0;
 			_renderable.stopAnimation();
 		}
 	};
 
 	this.turnLeftBearingOn = function() {
-		if(!_this.exploding) {
+		if(!_disabled) {
 			_renderable.state.angularSpeed = -_maxAngularSpeed;
 			_renderable.startAnimation(1, true, false);
 		}
 	};
 
 	this.turnLeftBearingOff = function() {
-		if(!_this.exploding) {
+		if(!_disabled) {
 			_renderable.state.angularSpeed = 0;
 			_renderable.stopAnimation();
 		}
 	};
 
 	this.turnCannonOn = function() {
-		if(!_this.exploding) {
+		if(!_disabled) {
 			var fire = function() {
 				var laser = new BT.Laser(world, type);
 				laser.owner = _shipID;
@@ -98,8 +104,7 @@ BT.Ship = function(world, type) {
 	};
 
 	this.turnCannonOff = function() {
-		if(!_this.exploding)
-			clearInterval(_cannonTimerID);
+		clearInterval(_cannonTimerID);
 	};
 
 	this.notifyAfterCalculation = function() {
@@ -120,7 +125,7 @@ BT.Ship = function(world, type) {
 		_deployState.x = x || _deployState.x;
 		_deployState.y = y || _deployState.y;
 		_deployState.angle = angle || _deployState.angle;
-		_this.exploding = false;
+		_disabled = false;
 		switch(type) {
 			case 1: _deployState.width = 44; _deployState.height = 56; image = BT.Resources.sprites.blackShip; break;
 			case 2: _deployState.width = 64; _deployState.height = 52; image = BT.Resources.sprites.silverShip; break;
@@ -130,21 +135,25 @@ BT.Ship = function(world, type) {
 	};
 
 	this.notifyCollision = function(target) {
-		if(!_this.exploding && target.owner != _shipID)
+		if(!_disabled && target.owner != _shipID)
 			_this.destroy();
 	};
 
 	this.destroy = function() {
 		_this.lives--;
-		_this.exploding = true;
+		_this.turnCannonOff();
+		disable();
 		_renderable = new BT.Renderable(BT.Resources.sprites.explosion, 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64});
 		_renderable.startAnimation(2, false, false, function() {
 			_renderable.stopAnimation();
-			_this.exploding = false;
 			if(_this.lives !== 0) {
 				_this.deploy();
 			}
 		});
+	};
+
+	this.notifyRemoved = function() {
+		disable();
 	};
 
 	this.draw = function() {
