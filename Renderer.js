@@ -48,7 +48,7 @@ BT.Renderer = function () {
 	var renderFrame = function () {
 		detectCollisions();
 		writeFps();
-		context.drawImage(background, 0, 0);
+		context.drawImage(background.node, background.x, background.y, background.width, background.height, 0, 0, _this.width, _this.height);
 		for(var renderable in scene) {
 			if(scene.hasOwnProperty(renderable)) {
 				scene[renderable].draw(context);
@@ -76,8 +76,8 @@ BT.Renderer = function () {
 		}
 	};
 
-	this.setBackground = function(archivo) {
-		background = archivo.node;
+	this.setBackground = function(image) {
+		background = image;
 	};
 
 	this.add = function (renderable) {

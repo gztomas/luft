@@ -8,7 +8,8 @@ BT.Laser = function(world, type) {
 		return _renderable.draw.apply(_renderable, arguments);
 	};
 	this.deploy = function(x, y, angle) {
-		_renderable = new BT.Renderable(BT.IMAGES["laser" + type], 0, {
+		var image = type == 1 ? BT.Resources.sprites.rocket : BT.Resources.sprites.laser;
+		_renderable = new BT.Renderable(image, 0, {
 			width: 40, height: 40, x: x, y: y, angle: angle, z: 0, speed: 20, angularSpeed: 0
 		});
 		BT.SpaceObject.apply(this, [_renderable.state]);
@@ -115,15 +116,16 @@ BT.Ship = function(world, type) {
 	};
 
 	this.deploy = function(x, y, angle) {
+		var image;
 		_deployState.x = x || _deployState.x;
 		_deployState.y = y || _deployState.y;
 		_deployState.angle = angle || _deployState.angle;
 		_this.exploding = false;
 		switch(type) {
-			case 1: _deployState.width = 44; _deployState.height = 56; break;
-			case 2: _deployState.width = 64; _deployState.height = 52; break;
+			case 1: _deployState.width = 44; _deployState.height = 56; image = BT.Resources.sprites.blackShip; break;
+			case 2: _deployState.width = 64; _deployState.height = 52; image = BT.Resources.sprites.silverShip; break;
 		}
-		_renderable = new BT.Renderable(BT.IMAGES["nave" + type], 10, JSON.parse(JSON.stringify(_deployState)));
+		_renderable = new BT.Renderable(image, 10, JSON.parse(JSON.stringify(_deployState)));
 		BT.SpaceObject.apply(this, [_renderable.state]);
 	};
 
@@ -135,7 +137,7 @@ BT.Ship = function(world, type) {
 	this.destroy = function() {
 		_this.lives--;
 		_this.exploding = true;
-		_renderable = new BT.Renderable(BT.IMAGES["explo"], 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64});
+		_renderable = new BT.Renderable(BT.Resources.sprites.explosion, 17, {x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64});
 		_renderable.startAnimation(2, false, false, function() {
 			_renderable.stopAnimation();
 			_this.exploding = false;

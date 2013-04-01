@@ -91,7 +91,17 @@ BT.Renderable = function(image, initialFrame, state) {
 		var y = state.y;
 		context.translate(x, y);
 		context.rotate(angle);
-		context.drawImage(image.node, 0, state.height * (_animation.numberOfFrames - 1 - _animation.frame), state.width, state.height, -state.width / 2, -state.height / 2, state.width, state.height);
+		context.drawImage(
+			image.node,
+			image.x,
+			image.y + state.height * (_animation.numberOfFrames - 1 - _animation.frame),
+			state.width,
+			state.height,
+			-state.width / 2,
+			-state.height / 2,
+			state.width,
+			state.height
+		);
 		context.rotate(-angle);
 		context.translate(-x, -y);
 	};
