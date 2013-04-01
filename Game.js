@@ -1,7 +1,7 @@
 var BT = window.BT || {};
 
 BT.Game = function() {
-	var silverShip, blackShip, salir, jugar;
+	var silverShip, blackShip, exitMenuItem, playMenuItem;
 	var renderer = new BT.Renderer();
 	var stage;
 
@@ -19,12 +19,12 @@ BT.Game = function() {
 		renderer.add(nave2);
 	};
 	var setUpMenuScene = function() {
-		jugar = new BT.Renderable(BT.Resources.sprites.play, 0, {x: 320, y: 50, width: 152, height: 30});
-		salir = new BT.Renderable(BT.Resources.sprites.exit, 1, {x: 320, y: 80, width: 152, height: 30});
+		playMenuItem = new BT.Renderable(BT.Resources.sprites.play, 0, {x: 320, y: 50, width: 152, height: 30});
+		exitMenuItem = new BT.Renderable(BT.Resources.sprites.exit, 1, {x: 320, y: 80, width: 152, height: 30});
 		renderer.clearScene();
 		renderer.setBackground(BT.Resources.sprites.mountains);
-		renderer.add(jugar);
-		renderer.add(salir);
+		renderer.add(playMenuItem);
+		renderer.add(exitMenuItem);
 	};
 	var setUpMatchScene = function() {
 		silverShip = new BT.Ship(renderer, 1);
@@ -65,13 +65,13 @@ BT.Game = function() {
     var menu = function() {
 		var selectedItem = 1;
 		if(BT.Keyboard.read(BT.Keys.UP)) {
-			jugar.setFrame(0);
-			salir.setFrame(1);
+			playMenuItem.setFrame(0);
+			exitMenuItem.setFrame(1);
 			selectedItem = 1;
 		}
 		if(BT.Keyboard.read(BT.Keys.DOWN)) {
-			jugar.setFrame(1);
-			salir.setFrame(0);
+			playMenuItem.setFrame(1);
+			exitMenuItem.setFrame(0);
 			selectedItem = 2;
 		}
 		if(BT.Keyboard.read(BT.Keys.ENTER)) {
@@ -99,8 +99,6 @@ BT.Game = function() {
 		renderer.init();
 		setUpInitialScene();
 		stage = intro;
-		//setUpMatchScene();
-		//stage = match;
 		setInterval(function() {
 			stage();
 		}, 10);
