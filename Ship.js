@@ -22,6 +22,10 @@ BT.Laser = function(world, type) {
 			world.remove(_this);
 		}
 	};
+	this.notifyCollision = function(target) {
+		//if(target.shipID != _this.ownerID)
+		//	world.remove(_this);
+	};
 };
 
 BT.Ship = function(world, type) {
@@ -32,10 +36,10 @@ BT.Ship = function(world, type) {
 	var _deployState = {x: 0, y: 0, angle: 0, z: 1, speed: 0, angularSpeed: 0};
 	var _firePeriod = 150;
 	var _cannonTimerID;
-	var _shipID = "ship" + BT.Ship.nextID++;
 	var _disabled = false;
 
 	this.lives = 6;
+	this.shipID = "ship" + BT.Ship.nextID++;
 
 	setInterval(function() {
 		if(!_disabled)
@@ -94,7 +98,7 @@ BT.Ship = function(world, type) {
 		if(!_disabled) {
 			var fire = function() {
 				var laser = new BT.Laser(world, type);
-				laser.owner = _shipID;
+				laser.ownerID = _this.shipID;
 				laser.deploy(_renderable.state.x, _renderable.state.y, _renderable.state.angle);
 				world.add(laser);
 			};
@@ -135,7 +139,7 @@ BT.Ship = function(world, type) {
 	};
 
 	this.notifyCollision = function(target) {
-		if(!_disabled && target.owner != _shipID)
+		if(!_disabled && target.ownerID != _this.shipID)
 			_this.destroy();
 	};
 
