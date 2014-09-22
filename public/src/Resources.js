@@ -18,7 +18,7 @@ BT.Resources = new function() {
 		request.onloadstart = showProgressBar;
 		request.onprogress = updateProgressBar;
 		request.onload = onLoad;
-		request.open("GET", "image/sprite.png", true);
+		request.open("GET", "img/sprite.png", true);
 		request.overrideMimeType('text/plain; charset=x-user-defined');
 		request.send(null);
 	};

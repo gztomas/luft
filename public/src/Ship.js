@@ -33,6 +33,7 @@ BT.Ship = function(world, type) {
 	var _renderable;
 	var _acceleration = 0.1;
 	var _maxAngularSpeed = 5;
+	var _maxSpeed = 20;
 	var _deployState = {x: 0, y: 0, angle: 0, z: 1, speed: 0, angularSpeed: 0};
 	var _firePeriod = 150;
 	var _cannonTimerID;
@@ -128,6 +129,11 @@ BT.Ship = function(world, type) {
 			state.x = state.x > 0 ? state.x % world.width : state.x + world.width;
 			state.y = state.y > 0 ? state.y % world.height : state.y + world.height;
 		}
+		Chilly.request('reportShipState', {
+			data: {
+				type: type
+			}
+		});
 	};
 
 	this.deploy = function(x, y, angle) {
