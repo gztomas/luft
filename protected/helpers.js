@@ -2,6 +2,6 @@
  * Helper functions
  */
 module.exports = {
-    dummy: function() {
-    }
+  dummy: function() {
+  }
 };
