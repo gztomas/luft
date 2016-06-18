@@ -136,11 +136,6 @@ BT.Ship = function(world, type) {
       state.x = state.x > 0 ? state.x % world.width : state.x + world.width;
       state.y = state.y > 0 ? state.y % world.height : state.y + world.height;
     }
-    Chilly.request('reportShipState', {
-      data: {
-        type: type
-      }
-    });
   };
 
   this.deploy = function(x, y, angle) {
