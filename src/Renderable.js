@@ -30,10 +30,8 @@ BT.SpaceObject = function(state) {
     var y1 = state.height * tolerance;
     var x2 = o.getState().width * tolerance;
     var y2 = o.getState().height * tolerance;
-    return state.x + x1 > o.getState().x - x2 &&
-      state.x - x1 < o.getState().x + x2 &&
-      state.y + y1 > o.getState().y - y2 &&
-      state.y - y1 < o.getState().y + y2;
+    return state.x + x1 > o.getState().x - x2 && state.x - x1 < o.getState().x + x2 &&
+      state.y + y1 > o.getState().y - y2 && state.y - y1 < o.getState().y + y2;
   };
 
   this.getState = function() {
@@ -101,17 +99,10 @@ BT.Renderable = function(image, initialFrame, state, unbound) {
   var draw = function(context, x, y, angle, scale) {
     context.translate(x, y);
     context.rotate(angle);
-    context.drawImage(
-      image.node,
-      image.x,
-      image.y + state.height * (_animation.numberOfFrames - 1 - _animation.frame),
-      state.width,
-      state.height,
-      -state.width * scale / 2,
-      -state.height * scale / 2,
-      state.width * scale,
-      state.height * scale
-    );
+    context.drawImage(image.node, image.x,
+      image.y + state.height * (_animation.numberOfFrames - 1 - _animation.frame), state.width,
+      state.height, -state.width * scale / 2, -state.height * scale / 2, state.width * scale,
+      state.height * scale);
     context.rotate(-angle);
     context.translate(-x, -y);
   };

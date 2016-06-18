@@ -18,13 +18,11 @@ BT.Utility = new function() {
       var enc3, enc4;
       if (isNaN(byte2)) {
         enc3 = enc4 = 64;
-      }
-      else {
+      } else {
         enc3 = ((byte2 & 15) << 2) | (byte3 >> 6);
         if (isNaN(byte3)) {
           enc4 = 64;
-        }
-        else {
+        } else {
           enc4 = byte3 & 63;
         }
       }

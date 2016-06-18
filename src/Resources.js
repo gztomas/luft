@@ -34,8 +34,7 @@ BT.Resources = new function() {
   var updateProgressBar = function(e) {
     if (e.lengthComputable) {
       progressBar.value = e.loaded / e.total * 100;
-    }
-    else {
+    } else {
       progressBar.removeAttribute("value");
     }
   };

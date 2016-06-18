@@ -24,7 +24,7 @@ BT.Laser = function(world, type) {
   };
   this.notifyCollision = function(/*target*/) {
     //if(target.shipID != _this.ownerID)
-    //	world.remove(_this);
+    //  world.remove(_this);
   };
 };
 
@@ -33,12 +33,11 @@ BT.Ship = function(world, type) {
   var _renderable;
   var _acceleration = 0.1;
   var _maxAngularSpeed = 5;
-  var _maxSpeed = 20;
   var _deployState = {x: 0, y: 0, angle: 0, z: 1, speed: 0, angularSpeed: 0};
   var _firePeriod = 150;
   var _cannonTimerID;
   var _disabled = false;
-  var _screeenBound = false;
+  var _screenBound = false;
 
   this.lives = 6;
   this.shipID = "ship" + BT.Ship.nextID++;
@@ -117,7 +116,7 @@ BT.Ship = function(world, type) {
 
   this.notifyAfterCalculation = function() {
     var state = _renderable.state;
-    if (_screeenBound) {
+    if (_screenBound) {
       var margin = 0;
       if (state.x + state.width * 0.5 > world.width - margin) {
         state.x = world.width - margin - state.width * 0.5;
@@ -131,8 +130,7 @@ BT.Ship = function(world, type) {
       if (state.y - state.height * 0.5 < margin) {
         state.y = margin + state.height * 0.5;
       }
-    }
-    else {
+    } else {
       state.x = state.x > 0 ? state.x % world.width : state.x + world.width;
       state.y = state.y > 0 ? state.y % world.height : state.y + world.height;
     }
@@ -173,18 +171,12 @@ BT.Ship = function(world, type) {
     switch (type) {
       case 1:
         _renderable = new BT.Renderable(BT.Resources.sprite.blueExplosion, 12, {
-          x: _renderable.state.x,
-          y: _renderable.state.y,
-          width: 84,
-          height: 84
+          x: _renderable.state.x, y: _renderable.state.y, width: 84, height: 84
         }, true);
         break;
       case 2:
         _renderable = new BT.Renderable(BT.Resources.sprite.explosion, 17, {
-          x: _renderable.state.x,
-          y: _renderable.state.y,
-          width: 64,
-          height: 64
+          x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64
         }, true);
         break;
     }

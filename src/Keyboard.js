@@ -15,10 +15,15 @@ BT.MainKeyboardShipController = new function() {
   BT.KeyboardShipController.apply(this, arguments);
   this.getKeyAssignments = function(ship) {
     return [
-      {key: BT.Keys.W, down: ship.turnEngineOn, up: ship.turnEngineOff},
-      {key: BT.Keys.A, down: ship.turnLeftBearingOn, up: ship.turnLeftBearingOff},
-      {key: BT.Keys.D, down: ship.turnRightBearingOn, up: ship.turnRightBearingOff},
-      {key: BT.Keys.Q, down: ship.turnCannonOn, up: ship.turnCannonOff}
+      {
+        key: BT.Keys.W, down: ship.turnEngineOn, up: ship.turnEngineOff
+      }, {
+        key: BT.Keys.A, down: ship.turnLeftBearingOn, up: ship.turnLeftBearingOff
+      }, {
+        key: BT.Keys.D, down: ship.turnRightBearingOn, up: ship.turnRightBearingOff
+      }, {
+        key: BT.Keys.Q, down: ship.turnCannonOn, up: ship.turnCannonOff
+      }
     ];
   }
 };
@@ -27,10 +32,15 @@ BT.SecondaryKeyboardShipController = new function() {
   BT.KeyboardShipController.apply(this, arguments);
   this.getKeyAssignments = function(ship) {
     return [
-      {key: BT.Keys.UP, down: ship.turnEngineOn, up: ship.turnEngineOff},
-      {key: BT.Keys.LEFT, down: ship.turnLeftBearingOn, up: ship.turnLeftBearingOff},
-      {key: BT.Keys.RIGHT, down: ship.turnRightBearingOn, up: ship.turnRightBearingOff},
-      {key: BT.Keys.RSHIFT, down: ship.turnCannonOn, up: ship.turnCannonOff}
+      {
+        key: BT.Keys.UP, down: ship.turnEngineOn, up: ship.turnEngineOff
+      }, {
+        key: BT.Keys.LEFT, down: ship.turnLeftBearingOn, up: ship.turnLeftBearingOff
+      }, {
+        key: BT.Keys.RIGHT, down: ship.turnRightBearingOn, up: ship.turnRightBearingOff
+      }, {
+        key: BT.Keys.RSHIFT, down: ship.turnCannonOn, up: ship.turnCannonOff
+      }
     ];
   }
 };
@@ -69,14 +79,5 @@ BT.Keyboard = function() {
 BT.Keyboard = new BT.Keyboard();
 
 BT.Keys = {
-  UP: 38,
-  DOWN: 40,
-  LEFT: 37,
-  RIGHT: 39,
-  ENTER: 13,
-  RSHIFT: 16,
-  Q: 81,
-  W: 87,
-  A: 65,
-  D: 68
+  UP: 38, DOWN: 40, LEFT: 37, RIGHT: 39, ENTER: 13, RSHIFT: 16, Q: 81, W: 87, A: 65, D: 68
 };

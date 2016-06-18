@@ -24,7 +24,9 @@ BT.Renderer = function() {
       fps.style.left = 0;
       document.body.appendChild(fps);
     }
-    fps.innerHTML = (1000 * frameTime.length / (frameTime[frameTime.length - 1] - frameTime[0])).toFixed(2) + "FPS";
+    fps.innerHTML =
+      (1000 * frameTime.length / (frameTime[frameTime.length - 1] - frameTime[0])).toFixed(2) +
+      "FPS";
     if (frameTime.length >= 50) {
       frameTime.shift();
     }
@@ -45,9 +47,9 @@ BT.Renderer = function() {
     detectCollisions();
     writeFps();
     if (background) {
-      context.drawImage(background.node, background.x, background.y, background.width, background.height, 0, 0, _this.width, _this.height);
-    }
-    else {
+      context.drawImage(background.node, background.x, background.y, background.width,
+        background.height, 0, 0, _this.width, _this.height);
+    } else {
       context.clearRect(0, 0, _this.width, _this.height);
     }
     var sortedRenderables = [];
@@ -59,8 +61,7 @@ BT.Renderer = function() {
     sortedRenderables.sort(function(a, b) {
       if (a.getState && b.getState) {
         return a.getState().z - b.getState().z;
-      }
-      else {
+      } else {
         return 0;
       }
     });
