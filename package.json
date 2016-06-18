@@ -1,0 +1,23 @@
+{
+  "name": "batalla",
+  "version": "1.0.0",
+  "description": "HTML5 spaceships game",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gztomas/batalla.git"
+  },
+  "author": "gztomas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gztomas/batalla/issues"
+  },
+  "homepage": "https://github.com/gztomas/batalla#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0"
+  }
+}
