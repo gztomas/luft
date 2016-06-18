@@ -11,8 +11,8 @@ BT.Renderer = function() {
   var scene = {};
   var _elementID = 0;
 
-  this.width = 1200;
-  this.height = 800;
+  this.width = window.innerWidth;
+  this.height = window.innerHeight;
 
   var writeFps = function() {
     frameTime.push(new Date());

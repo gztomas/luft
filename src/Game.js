@@ -5,8 +5,8 @@ BT.Game = function() {
   var renderer = new BT.Renderer();
   var stage;
 
-  var sceneWidth = 1200;
-  var sceneHeight = 800;
+  var sceneWidth = window.innerWidth;
+  var sceneHeight = window.innerHeight;
 
   var setUpInitialScene = function() {
     var versus = new BT.Renderable(BT.Resources.sprite.versus, 27, {

@@ -1,14 +1,17 @@
-.gameplay {
-  width: 1200px;
-  height: 800px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: -400px 0 0 -600px;
-  border: 6px outset grey;
-  background: black;
+* {
+  margin: 0;
+  padding: 0;
 }
-body {
-  background: url(img/wall.jpg) no-repeat center center fixed;
-  background-size: cover;
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+canvas {
+  display: block;
+}
+
+.gameplay {
+  background: black;
 }
