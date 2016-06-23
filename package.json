@@ -18,6 +18,8 @@
   "homepage": "https://github.com/gztomas/batalla#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.0"
+    "gulp-concat": "^2.6.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-uglify": "^1.5.4"
   }
 }
