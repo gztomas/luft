@@ -20,7 +20,7 @@ gulp.task('build', function() {
 
 gulp.task('watch', function() {
   livereload.listen();
-  gulp.watch(scriptsSource, ['scripts']);
+  gulp.watch(scriptsSource, ['build']);
 });
 
 gulp.task('default', ['build']);
