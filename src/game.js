@@ -1,21 +1,32 @@
-var BT = window.BT || {};
+'use strict';
 
-BT.Game = function() {
+import { Ship } from './ship';
+import { Renderer } from './renderer';
+import { Renderable } from './renderable';
+import { Resources } from './resources';
+import {
+  MainKeyboardShipController,
+  SecondaryKeyboardShipController,
+  Keyboard,
+  Keys
+} from './keyboard';
+
+export function Game() {
   var silverShip, blackShip, exitMenuItem, playMenuItem;
-  var renderer = new BT.Renderer();
+  var renderer = new Renderer();
   var stage;
 
   var sceneWidth = window.innerWidth;
   var sceneHeight = window.innerHeight;
 
   var setUpInitialScene = function() {
-    var versus = new BT.Renderable(BT.Resources.sprite.versus, 27, {
+    var versus = new Renderable(Resources.sprite.versus, 27, {
       x: sceneWidth / 2, y: sceneHeight / 2, width: 64, height: 84
     });
-    var silverShipDemo = new BT.Renderable(BT.Resources.sprite.silverShipDemo, 0, {
+    var silverShipDemo = new Renderable(Resources.sprite.silverShipDemo, 0, {
       x: sceneWidth / 3, y: sceneHeight / 2, width: 64, height: 64, scale: 2
     });
-    var blackShipDemo = new BT.Renderable(BT.Resources.sprite.blackShipDemo, 0, {
+    var blackShipDemo = new Renderable(Resources.sprite.blackShipDemo, 0, {
       x: sceneWidth * 2 / 3, y: sceneHeight / 2, width: 80, height: 68, scale: 2
     });
     versus.startAnimation(3, false, true);
@@ -28,30 +39,30 @@ BT.Game = function() {
     renderer.add(blackShipDemo);
   };
   var setUpMatchScene = function() {
-    silverShip = new BT.Ship(renderer, 1);
-    blackShip = new BT.Ship(renderer, 2);
+    silverShip = new Ship(renderer, 1);
+    blackShip = new Ship(renderer, 2);
     silverShip.deploy(sceneWidth / 3, sceneHeight / 2, -90);
     blackShip.deploy(sceneWidth * 2 / 3, sceneHeight / 2, 90);
     renderer.clearScene();
     renderer.setBackground(null);
     renderer.add(silverShip);
     renderer.add(blackShip);
-    BT.MainKeyboardShipController.assign(silverShip);
-    BT.SecondaryKeyboardShipController.assign(blackShip);
+    MainKeyboardShipController.assign(silverShip);
+    SecondaryKeyboardShipController.assign(blackShip);
   };
   var setUpGameOverScene = function() {
     renderer.clearScene();
     if (silverShip.lives === 0 && blackShip.lives === 0) {
-      renderer.setBackground(BT.Resources.sprite.draw);
+      renderer.setBackground(Resources.sprite.draw);
     } else {
-      renderer.setBackground(BT.Resources.sprite.winner);
+      renderer.setBackground(Resources.sprite.winner);
       var ship;
       if (silverShip.lives === 0) {
-        ship = new BT.Renderable(BT.Resources.sprite.silverShipDemo, 0, {
+        ship = new Renderable(Resources.sprite.silverShipDemo, 0, {
           x: sceneWidth / 2, y: sceneHeight / 2 + 100, width: 64, height: 64, scale: 3
         });
       } else {
-        ship = new BT.Renderable(BT.Resources.sprite.blackShipDemo, 0, {
+        ship = new Renderable(Resources.sprite.blackShipDemo, 0, {
           x: sceneWidth / 2, y: sceneHeight / 2 + 100, width: 80, height: 68, scale: 3
         });
       }
@@ -61,26 +72,26 @@ BT.Game = function() {
   };
 
   var intro = function() {
-    if (BT.Keyboard.read(BT.Keys.ENTER)) {
-      BT.Keyboard.flush();
+    if (Keyboard.read(Keys.ENTER)) {
+      Keyboard.flush();
       setUpMatchScene();
       stage = match;
     }
   };
   var menu = function() {
     var selectedItem = 1;
-    if (BT.Keyboard.read(BT.Keys.UP)) {
+    if (Keyboard.read(Keys.UP)) {
       playMenuItem.setFrame(0);
       exitMenuItem.setFrame(1);
       selectedItem = 1;
     }
-    if (BT.Keyboard.read(BT.Keys.DOWN)) {
+    if (Keyboard.read(Keys.DOWN)) {
       playMenuItem.setFrame(1);
       exitMenuItem.setFrame(0);
       selectedItem = 2;
     }
-    if (BT.Keyboard.read(BT.Keys.ENTER)) {
-      BT.Keyboard.flush();
+    if (Keyboard.read(Keys.ENTER)) {
+      Keyboard.flush();
       if (selectedItem == 1) {
         setUpMatchScene();
         stage = match;
@@ -94,8 +105,8 @@ BT.Game = function() {
     }
   };
   var gameOver = function() {
-    if (BT.Keyboard.read(BT.Keys.ENTER)) {
-      BT.Keyboard.flush();
+    if (Keyboard.read(Keys.ENTER)) {
+      Keyboard.flush();
       setUpInitialScene();
       stage = menu;
     }
@@ -109,4 +120,4 @@ BT.Game = function() {
     }, 10);
   };
   init();
-};
+}

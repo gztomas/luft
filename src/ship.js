@@ -1,34 +1,10 @@
-var BT = window.BT || {};
+'use strict';
 
-BT.Laser = function(world, type) {
-  var _this = this;
-  var _renderable;
+import { Laser } from './laser';
+import { Resources } from './resources';
+import { Renderable, SpaceObject } from './renderable';
 
-  this.draw = function() {
-    return _renderable.draw.apply(_renderable, arguments);
-  };
-  this.deploy = function(x, y, angle) {
-    var image = type == 1 ? BT.Resources.sprite.rocket : BT.Resources.sprite.laser;
-    _renderable = new BT.Renderable(image, 0, {
-      width: 40, height: 40, x: x, y: y, angle: angle, z: 0, speed: 20, angularSpeed: 0
-    });
-    BT.SpaceObject.apply(this, [_renderable.state]);
-  };
-  this.notifyAfterCalculation = function() {
-    if (_renderable.state.y < -_renderable.state.height ||
-      _renderable.state.y > world.height + _renderable.state.height ||
-      _renderable.state.x < -_renderable.state.width ||
-      _renderable.state.x > world.width + _renderable.state.width) {
-      world.remove(_this);
-    }
-  };
-  this.notifyCollision = function(/*target*/) {
-    //if(target.shipID != _this.ownerID)
-    //  world.remove(_this);
-  };
-};
-
-BT.Ship = function(world, type) {
+export function Ship(world, type) {
   var _this = this;
   var _renderable;
   var _acceleration = 0.1;
@@ -40,7 +16,7 @@ BT.Ship = function(world, type) {
   var _screenBound = false;
 
   this.lives = 6;
-  this.shipID = "ship" + BT.Ship.nextID++;
+  this.shipID = "ship" + Ship.nextID++;
 
   setInterval(function() {
     if (!_disabled) {
@@ -100,7 +76,7 @@ BT.Ship = function(world, type) {
   this.turnCannonOn = function() {
     if (!_disabled) {
       var fire = function() {
-        var laser = new BT.Laser(world, type);
+        var laser = new Laser(world, type);
         laser.ownerID = _this.shipID;
         laser.deploy(_renderable.state.x, _renderable.state.y, _renderable.state.angle);
         world.add(laser);
@@ -146,16 +122,16 @@ BT.Ship = function(world, type) {
       case 1:
         _deployState.width = 44;
         _deployState.height = 56;
-        image = BT.Resources.sprite.blackShip;
+        image = Resources.sprite.blackShip;
         break;
       case 2:
         _deployState.width = 64;
         _deployState.height = 52;
-        image = BT.Resources.sprite.silverShip;
+        image = Resources.sprite.silverShip;
         break;
     }
-    _renderable = new BT.Renderable(image, 10, JSON.parse(JSON.stringify(_deployState)), true);
-    BT.SpaceObject.apply(this, [_renderable.state]);
+    _renderable = new Renderable(image, 10, JSON.parse(JSON.stringify(_deployState)), true);
+    SpaceObject.apply(this, [_renderable.state]);
   };
 
   this.notifyCollision = function(target) {
@@ -170,12 +146,12 @@ BT.Ship = function(world, type) {
     disable();
     switch (type) {
       case 1:
-        _renderable = new BT.Renderable(BT.Resources.sprite.blueExplosion, 12, {
+        _renderable = new Renderable(Resources.sprite.blueExplosion, 12, {
           x: _renderable.state.x, y: _renderable.state.y, width: 84, height: 84
         }, true);
         break;
       case 2:
-        _renderable = new BT.Renderable(BT.Resources.sprite.explosion, 17, {
+        _renderable = new Renderable(Resources.sprite.explosion, 17, {
           x: _renderable.state.x, y: _renderable.state.y, width: 64, height: 64
         }, true);
         break;
@@ -195,5 +171,6 @@ BT.Ship = function(world, type) {
   this.draw = function() {
     return _renderable.draw.apply(_renderable, arguments);
   };
-};
-BT.Ship.nextID = 0;
+}
+
+Ship.nextID = 0;

@@ -1,6 +1,6 @@
-var BT = window.BT || {};
+'use strict';
 
-BT.Renderer = function() {
+export function Renderer() {
   var _this = this;
   var canvas;
   var context;
@@ -118,4 +118,4 @@ BT.Renderer = function() {
     }
     scene = {};
   };
-};
+}

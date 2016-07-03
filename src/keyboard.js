@@ -1,51 +1,51 @@
-var BT = window.BT || {};
+'use strict';
 
-BT.KeyboardShipController = function() {
+export function KeyboardShipController() {
   var _this = this;
   this.assign = function(ship) {
     var keyAssignments = _this.getKeyAssignments(ship);
     for (var i = 0; i < keyAssignments.length; i++) {
-      BT.Keyboard.onKeyDown(keyAssignments[i].key, keyAssignments[i].down);
-      BT.Keyboard.onKeyUp(keyAssignments[i].key, keyAssignments[i].up);
+      Keyboard.onKeyDown(keyAssignments[i].key, keyAssignments[i].down);
+      Keyboard.onKeyUp(keyAssignments[i].key, keyAssignments[i].up);
     }
   };
-};
+}
 
-BT.MainKeyboardShipController = new function() {
-  BT.KeyboardShipController.apply(this, arguments);
+export var MainKeyboardShipController = new function() {
+  KeyboardShipController.apply(this, arguments);
   this.getKeyAssignments = function(ship) {
     return [
       {
-        key: BT.Keys.W, down: ship.turnEngineOn, up: ship.turnEngineOff
+        key: Keys.W, down: ship.turnEngineOn, up: ship.turnEngineOff
       }, {
-        key: BT.Keys.A, down: ship.turnLeftBearingOn, up: ship.turnLeftBearingOff
+        key: Keys.A, down: ship.turnLeftBearingOn, up: ship.turnLeftBearingOff
       }, {
-        key: BT.Keys.D, down: ship.turnRightBearingOn, up: ship.turnRightBearingOff
+        key: Keys.D, down: ship.turnRightBearingOn, up: ship.turnRightBearingOff
       }, {
-        key: BT.Keys.Q, down: ship.turnCannonOn, up: ship.turnCannonOff
+        key: Keys.Q, down: ship.turnCannonOn, up: ship.turnCannonOff
       }
     ];
   }
 };
 
-BT.SecondaryKeyboardShipController = new function() {
-  BT.KeyboardShipController.apply(this, arguments);
+export var SecondaryKeyboardShipController = new function() {
+  KeyboardShipController.apply(this, arguments);
   this.getKeyAssignments = function(ship) {
     return [
       {
-        key: BT.Keys.UP, down: ship.turnEngineOn, up: ship.turnEngineOff
+        key: Keys.UP, down: ship.turnEngineOn, up: ship.turnEngineOff
       }, {
-        key: BT.Keys.LEFT, down: ship.turnLeftBearingOn, up: ship.turnLeftBearingOff
+        key: Keys.LEFT, down: ship.turnLeftBearingOn, up: ship.turnLeftBearingOff
       }, {
-        key: BT.Keys.RIGHT, down: ship.turnRightBearingOn, up: ship.turnRightBearingOff
+        key: Keys.RIGHT, down: ship.turnRightBearingOn, up: ship.turnRightBearingOff
       }, {
-        key: BT.Keys.RSHIFT, down: ship.turnCannonOn, up: ship.turnCannonOff
+        key: Keys.RSHIFT, down: ship.turnCannonOn, up: ship.turnCannonOff
       }
     ];
   }
 };
 
-BT.Keyboard = function() {
+export var Keyboard = new function() {
   var keys = {};
   var handlersDown = {};
   var handlersUp = {};
@@ -76,8 +76,7 @@ BT.Keyboard = function() {
     handlersUp[key] = callback;
   };
 };
-BT.Keyboard = new BT.Keyboard();
 
-BT.Keys = {
+export var Keys = {
   UP: 38, DOWN: 40, LEFT: 37, RIGHT: 39, ENTER: 13, RSHIFT: 16, Q: 81, W: 87, A: 65, D: 68
 };

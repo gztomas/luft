@@ -1,6 +1,6 @@
-var BT = window.BT || {};
+'use strict';
 
-BT.SpaceObject = function(state) {
+export function SpaceObject(state) {
   var _this = this;
   var _friction = 0.01;
   state.acceleration = 0;
@@ -39,9 +39,9 @@ BT.SpaceObject = function(state) {
   };
 
   setInterval(_this.calculate, 10);
-};
+}
 
-BT.Renderable = function(image, initialFrame, state, unbound) {
+export function Renderable(image, initialFrame, state, unbound) {
   var _this = this;
   var _animation = {
     id: null,
@@ -138,4 +138,4 @@ BT.Renderable = function(image, initialFrame, state, unbound) {
       _this.previousFrame();
     }
   };
-};
+}

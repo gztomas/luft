@@ -1,6 +1,6 @@
-var BT = window.BT || {};
+'use strict';
 
-BT.Utility = new function() {
+export var Utility = new function() {
   // This encoding function is from Philippe Tenenhaus's example at http://www.philten.com/us-xmlhttprequest-image/
   this.base64Encode = function(inputStr) {
     var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
