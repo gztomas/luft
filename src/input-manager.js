@@ -1,6 +1,22 @@
 'use strict';
 
-export function KeyboardShipController() {
+export class InputManager {
+
+  readContinue() {
+    var enterStatus = Keyboard.read(Keys.ENTER);
+    if (enterStatus) {
+      Keyboard.flush();
+    }
+    return enterStatus;
+  }
+
+  control(primary, secondary) {
+    MainKeyboardShipController.assign(primary);
+    SecondaryKeyboardShipController.assign(secondary);
+  }
+}
+
+function KeyboardShipController() {
   var _this = this;
   this.assign = function(ship) {
     var keyAssignments = _this.getKeyAssignments(ship);
@@ -11,7 +27,7 @@ export function KeyboardShipController() {
   };
 }
 
-export var MainKeyboardShipController = new function() {
+var MainKeyboardShipController = new function() {
   KeyboardShipController.apply(this, arguments);
   this.getKeyAssignments = function(ship) {
     return [
@@ -28,7 +44,7 @@ export var MainKeyboardShipController = new function() {
   }
 };
 
-export var SecondaryKeyboardShipController = new function() {
+var SecondaryKeyboardShipController = new function() {
   KeyboardShipController.apply(this, arguments);
   this.getKeyAssignments = function(ship) {
     return [
@@ -45,7 +61,7 @@ export var SecondaryKeyboardShipController = new function() {
   }
 };
 
-export var Keyboard = new function() {
+ var Keyboard = new function() {
   var keys = {};
   var handlersDown = {};
   var handlersUp = {};
@@ -77,6 +93,6 @@ export var Keyboard = new function() {
   };
 };
 
-export var Keys = {
+var Keys = {
   UP: 38, DOWN: 40, LEFT: 37, RIGHT: 39, ENTER: 13, RSHIFT: 16, Q: 81, W: 87, A: 65, D: 68
 };
