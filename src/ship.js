@@ -1,6 +1,6 @@
 'use strict';
 
-import { Laser } from './laser';
+import { Weapon } from './weapon';
 import { Resources } from './resources';
 import { Renderable, SpaceObject } from './renderable';
 
@@ -76,7 +76,7 @@ export function Ship(world, type) {
   this.turnCannonOn = function() {
     if (!_disabled) {
       var fire = function() {
-        var laser = new Laser(world, type);
+        var laser = new Weapon(world, type);
         laser.ownerID = _this.shipID;
         laser.deploy(_renderable.state.x, _renderable.state.y, _renderable.state.angle);
         world.add(laser);

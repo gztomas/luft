@@ -3,7 +3,7 @@
 import { Resources } from './resources';
 import { Renderable, SpaceObject } from './renderable';
 
-export function Laser(world, type) {
+export function Weapon(world, type) {
   var _this = this;
   var _renderable;
 
