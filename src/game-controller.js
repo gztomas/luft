@@ -11,7 +11,7 @@ import {
   Keys
 } from './keyboard';
 
-export function Game() {
+export function GameController() {
   var silverShip, blackShip, exitMenuItem, playMenuItem;
   var renderer = new Renderer();
   var stage;

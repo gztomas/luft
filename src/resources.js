@@ -1,6 +1,6 @@
 'use strict';
 
-import { Game } from './game';
+import { GameController } from './game-controller';
 import { Utility } from './utils';
 
 export var Resources = new function() {
@@ -13,7 +13,7 @@ export var Resources = new function() {
   this.sprite = null;
 
   var onResourcesLoaded = function() {
-    new Game();
+    new GameController();
   };
 
   var init = function() {
