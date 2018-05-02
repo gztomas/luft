@@ -1,6 +1,6 @@
 'use strict';
 
-import { Resources } from './resources';
+import { Resources } from './';
 import { Renderable, SpaceObject } from './renderable';
 
 export class Weapon {

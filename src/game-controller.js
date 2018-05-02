@@ -3,7 +3,7 @@
 import { Ship } from './ship';
 import { Renderer } from './renderer';
 import { Renderable } from './renderable';
-import { Resources } from './resources';
+import { Resources } from './';
 import { InputManager } from './input-manager';
 
 export class GameController {

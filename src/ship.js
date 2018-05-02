@@ -1,7 +1,7 @@
 'use strict';
 
 import { Weapon } from './weapon';
-import { Resources } from './resources';
+import { Resources } from './';
 import { Renderable, SpaceObject } from './renderable';
 
 export function Ship(world, type) {

@@ -1,7 +1,6 @@
-'use strict';
-
 import { GameController } from './game-controller';
 import { Utility } from './utils';
+import sprite from '../img/sprite.png';
 
 export var Resources = new function() {
   var _this = this;
@@ -21,7 +20,7 @@ export var Resources = new function() {
     request.onloadstart = showProgressBar;
     request.onprogress = updateProgressBar;
     request.onload = onLoad;
-    request.open("GET", "img/sprite.png", true);
+    request.open("GET", sprite, true);
     request.overrideMimeType('text/plain; charset=x-user-defined');
     request.send(null);
   };
